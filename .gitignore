@@ -1,0 +1,112 @@
+# Build outputs
+target/
+build/
+dist/
+out/
+*.jar
+*.jar.original
+*.war
+*.ear
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+.pnp
+.pnp.js
+
+# Frontend build files
+Parking-Frontend/dist/
+Parking-Frontend/.vite/
+Parking-Frontend/.next/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Backend specific
+src/main/resources/application-local.properties
+src/main/resources/application-dev.properties
+src/main/resources/application-test.properties
+
+# Maven
+.m2/
+mvn.log
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.log
+.cache/
+.tmp/
+
+# Database files
+*.db
+*.sqlite
+
+# Documentation (temp/build files)
+docs/build/
+site/
+
+# OS specific
+Thumbs.db
+Desktop.ini
+
+# Private/sensitive files
+*.key
+*.pem
+secrets/
+config/sensitive/
+
+# This project specific
+database_migration_frontend_fixes.sql
+API_ENDPOINT_MISMATCH_AUDIT.md
+DEBUGGING_GUIDE.md
+LAYOUT_SPACING_IMPROVEMENTS.md
+PAYMENT_IMPLEMENTATION.md
+PAYMENT_QUICK_START.md
+HELP.md
+FEATURES_SUMMARY.md
+FINAL_IMPLEMENTATION_REPORT.txt
+IMPLEMENTATION_COMPLETE_SUMMARY.md
+IMPLEMENTATION_COMPLETE.md
+IMPLEMENTATION_GUIDE.md
+MAP_FEATURE_API_DOCUMENTATION.md
+MAP_FEATURE_IMPLEMENTATION_COMPLETE.md
+MAP_QUICK_REFERENCE.md
+PARKING_SLOT_MANAGEMENT_README.md
+QUICK_START.md
+SLOT_AND_BOOKING_IMPLEMENTATION.md
+SLOT_MANAGEMENT_API.md
+TESTING_GUIDE.md
+FRONTEND_SCHEMA.md
+FRONTEND_MAP_INTEGRATION_GUIDE.md
+API_DOCUMENTATION_FOR_FRONTEND.md
+BACKEND_FRONTEND_INTEGRATION_FIXES.md
+BACKEND_FRONTEND_INTEGRATION_FIXES.md
+IMPLEMENTATION_VERIFICATION.md
+
+# Ignore all markdown documentation across the repo except the root README.md
+**/*.md
+!/README.md
+
+# Do not commit local Spring Boot secrets
+Smart-Parking-Backend/src/main/resources/application.properties
+
+# Extra environment files
+.env*
+*.env
+
