@@ -4,7 +4,7 @@ export default function BottomNav() {
   const role = localStorage.getItem("role");
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
-  
+
   // Admin-specific tabs
   const adminTabs = [
     { id: "profile", label: "Profile", icon: "👤", onclick: "admin-tab" },
@@ -12,6 +12,8 @@ export default function BottomNav() {
     { id: "slots", label: "Manage Slots", icon: "🅿️", onclick: "admin-tab" },
     { id: "locations", label: "Manage Locations", icon: "📍", onclick: "admin-tab" },
     { id: "bookings", label: "Bookings", icon: "📅", onclick: "admin-tab" },
+    // Direct route to the analytics page
+    { to: "/admin/reports", label: "Reports", icon: "📈" },
   ];
 
   // Regular user tabs
@@ -20,7 +22,12 @@ export default function BottomNav() {
     { to: "/map", label: "Map", icon: "🗺️" },
     { to: "/slots", label: "Slots", icon: "🅿️" },
     { to: "/bookings", label: "Bookings", icon: "📄" },
-    ...(role === "ADMIN" ? [{ to: "/admin", label: "Admin", icon: "⚙️" }] : []),
+    ...(role === "ADMIN"
+      ? [
+        { to: "/admin", label: "Admin", icon: "⚙️" },
+        { to: "/admin/reports", label: "Reports", icon: "📈" },
+      ]
+      : []),
     { to: "/payments", label: "Pay", icon: "💳" },
   ];
 
@@ -45,15 +52,14 @@ export default function BottomNav() {
             </button>
           );
         }
-        
+
         // Regular NavLink (Profile, Map, etc.)
         return (
           <NavLink
             key={tab.to}
             to={tab.to}
             className={({ isActive }) =>
-              `flex flex-col items-center text-xs ${
-                isActive ? "text-blue-600" : "text-gray-400"
+              `flex flex-col items-center text-xs ${isActive ? "text-blue-600" : "text-gray-400"
               }`
             }
           >

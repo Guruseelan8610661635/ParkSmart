@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import BottomNav from "./BottomNav";
 import { isLoggedIn } from "../utils/auth";
 
+import { Outlet } from "react-router-dom";
+
 export default function MobileLayout({ children }) {
   const [loggedIn, setLoggedIn] = useState(isLoggedIn());
 
@@ -24,7 +26,7 @@ export default function MobileLayout({ children }) {
     <div className="min-h-screen bg-gray-200 flex items-center justify-center p-2">
       <div className="w-[430px] h-[800px] bg-white/95 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto px-6 pt-5 pb-20 scrollbar-hide">
-          {children}
+          {children ?? <Outlet />}
         </div>
 
         {/* 🔒 SHOW ONLY AFTER LOGIN */}

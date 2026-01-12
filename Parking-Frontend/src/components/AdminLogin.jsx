@@ -62,7 +62,11 @@ export default function AdminLogin({ onBack }) {
 
       if (response.role === "ADMIN" && response.token) {
         console.log("✅ Step 2 Complete: Admin logged in with 2FA");
-        navigate("/admin", { replace: true });
+        console.log("🔑 Token saved to localStorage:", !!localStorage.getItem("token"));
+        console.log("👤 Role saved:", localStorage.getItem("role"));
+
+        // Use window.location to ensure a full page reload with fresh auth state
+        window.location.href = "/admin";
       } else {
         setError("Invalid response from server");
       }

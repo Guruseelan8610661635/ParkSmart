@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.smartparking.model.Role;
@@ -244,6 +245,36 @@ public class AuthController {
             e.printStackTrace();
             return ResponseEntity.status(500)
                     .body(Map.of("error", "An error occurred during OTP verification"));
+        }
+    }
+
+    /**
+     * Get all users (Admin only)
+     */
+    @GetMapping("/admin/users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllUsers() {
+        try {
+            List<User> users = repo.findAll();
+            
+            List<Map<String, Object>> usersList = users.stream()
+                    .map(user -> {
+                        Map<String, Object> userMap = new HashMap<>();
+                        userMap.put("id", user.getId());
+                        userMap.put("email", user.getEmail());
+                        userMap.put("name", user.getName());
+                        userMap.put("phone", user.getPhone());
+                        userMap.put("role", user.getRole() != null ? user.getRole().name() : "USER");
+                        userMap.put("createdAt", user.getCreatedAt());
+                        return userMap;
+                    })
+                    .collect(Collectors.toList());
+            
+            return ResponseEntity.ok(usersList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "Failed to fetch users: " + e.getMessage()));
         }
     }
 }

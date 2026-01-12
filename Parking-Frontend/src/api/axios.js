@@ -29,15 +29,27 @@ api.interceptors.response.use(
     if (error.response?.status === 401 || error.response?.status === 403) {
       // Only redirect if this is not a POST/PUT/DELETE request (which we want to handle with error notification)
       const isDataModificationRequest = ['POST', 'PUT', 'DELETE'].includes(error.config?.method?.toUpperCase());
-      
-      if (!isDataModificationRequest) {
+
+      // Don't auto-redirect for certain endpoints that have their own error handling
+      const shouldNotAutoRedirect =
+        error.config?.url?.includes('/auth/admin/users') ||
+        error.config?.url?.includes('/admin/reports') ||
+        error.config?.url?.includes('/analytics');
+
+      if (!isDataModificationRequest && !shouldNotAutoRedirect) {
         // For GET requests on page load, do a hard redirect
+        console.error('🚫 Unauthorized access, redirecting to login...');
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         localStorage.removeItem("role");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("email");
+        localStorage.removeItem("name");
         window.location.href = "/";
+      } else {
+        console.warn('⚠️ API Error (not auto-redirecting):', error.config?.url, error.response?.status);
       }
-      // For data modification requests, let the error propagate so the component can handle it
+      // For data modification requests or protected endpoints, let the error propagate so the component can handle it
     }
     return Promise.reject(error);
   }
