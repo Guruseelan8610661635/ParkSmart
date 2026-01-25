@@ -23,7 +23,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         SELECT COUNT(b) > 0 FROM Booking b
         WHERE b.slotId = :slotId
         AND b.status = 'ACTIVE'
-        AND (b.entryTime < :exitTime AND b.exitTime > :entryTime)
+        AND (b.entryTime < :exitTime AND (b.exitTime IS NULL OR b.exitTime > :entryTime))
     """)
     boolean hasTimeConflict(
         @Param("slotId") Long slotId,

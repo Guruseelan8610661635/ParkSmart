@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { paymentService } from '../services/paymentService';
+import { pricingService } from '../services/pricingService';
 
 export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
   const [paymentMethod, setPaymentMethod] = useState('CARD');
@@ -8,7 +9,12 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
   const [transactionId, setTransactionId] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const amount = booking.parkingFee || 0;
+  const [ratePerHour, setRatePerHour] = useState(null);
+  const [liveMinutes, setLiveMinutes] = useState(booking.durationMinutes || 0);
+  const [liveAmount, setLiveAmount] = useState(booking.parkingFee || 0);
+
+  // Use liveAmount as amount to pay (updates every 30s)
+  const amount = liveAmount || booking.parkingFee || 0;
 
   const handlePayment = async () => {
     if (isProcessing) return;
@@ -92,6 +98,48 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
   }
 
   // Payment options screen
+
+  // Fetch pricing and set up live tick for duration and amount
+  useEffect(() => {
+    let mounted = true;
+    const loadRate = async () => {
+      try {
+        const data = await pricingService.getPricingByType(booking.vehicleType || 'CAR');
+        if (mounted) {
+          const rate = data?.hourlyRate ?? data?.ratePerHour ?? 0;
+          setRatePerHour(rate);
+          // Initialize liveMinutes and liveAmount
+          if (!booking.exitTime) {
+            const minutes = Math.max(0, Math.floor((Date.now() - new Date(booking.entryTime).getTime()) / 60000));
+            setLiveMinutes(minutes);
+            setLiveAmount((rate * minutes) / 60);
+          } else {
+            setLiveMinutes(booking.durationMinutes || 0);
+            setLiveAmount(booking.parkingFee || 0);
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          setRatePerHour(0);
+        }
+      }
+    };
+
+    loadRate();
+
+    const interval = setInterval(() => {
+      if (!booking.exitTime) {
+        const minutes = Math.max(0, Math.floor((Date.now() - new Date(booking.entryTime).getTime()) / 60000));
+        setLiveMinutes(minutes);
+        setLiveAmount(((ratePerHour || 0) * minutes) / 60);
+      }
+    }, 30000);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, [booking.entryTime, booking.exitTime, booking.vehicleType, ratePerHour]);
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-6">
@@ -103,11 +151,11 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
         </div>
 
         {/* Amount Card */}
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border-2 border-blue-200">
+        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
           <p className="text-gray-600 text-sm mb-2">Amount Due</p>
           <p className="text-4xl font-bold text-gray-900">₹{amount.toFixed(2)}</p>
           <p className="text-gray-500 text-xs mt-2">
-            ⏱️ Duration: {booking.durationMinutes} minutes
+            ⏱️ Duration: {liveMinutes} minutes
           </p>
         </div>
 
@@ -162,14 +210,14 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
           <button
             onClick={onClose}
             disabled={loading}
-            className="flex-1 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg font-bold transition disabled:opacity-50"
+            className="flex-1 py-3 bg-white border border-black text-black rounded-lg font-bold transition disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handlePayment}
             disabled={loading || isProcessing}
-            className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 py-3 bg-black md:bg-blue-600 hover:bg-black md:hover:bg-blue-700 text-white rounded-lg font-bold transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

@@ -26,30 +26,26 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      // Only redirect if this is not a POST/PUT/DELETE request (which we want to handle with error notification)
-      const isDataModificationRequest = ['POST', 'PUT', 'DELETE'].includes(error.config?.method?.toUpperCase());
+    const status = error.response?.status;
+    if (status === 401 || status === 403) {
+      // Emit a detailed auth:error event so app can decide what to do (no automatic logout)
+      const info = {
+        status,
+        url: error.config?.url,
+        method: error.config?.method?.toUpperCase(),
+        data: error.response?.data || null,
+      };
+      console.error('🚨 Auth error intercepted:', info);
 
-      // Don't auto-redirect for certain endpoints that have their own error handling
-      const shouldNotAutoRedirect =
-        error.config?.url?.includes('/auth/admin/users') ||
-        error.config?.url?.includes('/admin/reports') ||
-        error.config?.url?.includes('/analytics');
-
-      if (!isDataModificationRequest && !shouldNotAutoRedirect) {
-        // For GET requests on page load, do a hard redirect
-        console.error('🚫 Unauthorized access, redirecting to login...');
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("role");
-        localStorage.removeItem("userId");
-        localStorage.removeItem("email");
-        localStorage.removeItem("name");
-        window.location.href = "/";
-      } else {
-        console.warn('⚠️ API Error (not auto-redirecting):', error.config?.url, error.response?.status);
+      try {
+        window.dispatchEvent(new CustomEvent('auth:error', { detail: info }));
+      } catch (e) {
+        // ignore in non-browser envs
       }
-      // For data modification requests or protected endpoints, let the error propagate so the component can handle it
+
+      // Keep previous conservative behavior: do not auto-clear storage or redirect here.
+      // Let the calling code handle UI/redirect while having more context via event.
+      console.warn('⚠️ API Auth error (401/403). Letting the caller handle it:', info);
     }
     return Promise.reject(error);
   }

@@ -140,7 +140,7 @@ public class BookingService {
         boolean conflict = bookingRepo.hasTimeConflict(
                 booking.getSlotId(),
                 booking.getEntryTime(),
-                booking.getExitTime() != null ? booking.getExitTime() : LocalDateTime.now().plusHours(2)
+                booking.getExitTime() != null ? booking.getExitTime() : booking.getEntryTime().plusHours(2)
         );
 
         if (conflict) {
@@ -219,9 +219,7 @@ public class BookingService {
             );
         }
 
-        // Process payment simulation
-        PaymentService.PaymentResult paymentResult = paymentService.processPayment(parkingFee);
-
+        // Do NOT auto-process payment here. Build a pending payment response instead.
         // Get vehicle type and rate for response
         String vehicleTypeName = booking.getVehicleType() != null ? 
                                  booking.getVehicleType().name() : "CAR";
@@ -229,40 +227,14 @@ public class BookingService {
                              feeCalculationService.getRatePerHour(booking.getVehicleType()) :
                              feeCalculationService.getRatePerHour();
 
-        // Update booking based on payment result
-        if (paymentResult.isSuccess()) {
-            booking.setParkingFee(parkingFee);
-            booking.setTransactionId(paymentResult.getTransactionId());
-            booking.setStatus(ParkingStatus.COMPLETED);
-        } else {
-            // Payment failed - leave booking as ACTIVE for retry
-            booking.setStatus(ParkingStatus.ACTIVE);
-            // Revert exit time so user can try again
-            booking.setExitTime(null);
-
-            return new CheckoutResponse(
-                    bookingId,
-                    booking.getSlotId(),
-                    vehicleTypeName,
-                    durationMinutes,
-                    appliedRate,
-                    parkingFee,
-                    false,
-                    null,
-                    paymentResult.getMessage()
-            );
-        }
-
-        // Save updated booking
+        // Mark booking as pending payment and save fee
+        booking.setParkingFee(parkingFee);
+        booking.setPaymentStatus("PENDING_PAYMENT");
         bookingRepo.save(booking);
 
-        // Release the slot (make it available again)
-        Slot slot = slotRepo.findById(booking.getSlotId())
-                .orElseThrow(() -> new RuntimeException("Slot not found"));
-        slot.setAvailable(true);
-        slotRepo.save(slot);
+        // Do NOT release the slot here; wait for payment confirmation via /api/payments/process
 
-        // Return success response
+        // Return pending payment response so frontend can show payment modal
         return new CheckoutResponse(
                 bookingId,
                 booking.getSlotId(),
@@ -270,9 +242,9 @@ public class BookingService {
                 durationMinutes,
                 appliedRate,
                 parkingFee,
-                true,
-                paymentResult.getTransactionId(),
-                paymentResult.getMessage()
+                false,
+                null,
+                "Pending payment"
         );
     }
 

@@ -130,12 +130,12 @@ export default function ManageLocations() {
                                 <div className="p-6 bg-white">
                                     <div className="grid grid-cols-2 gap-4 mb-6">
                                         {/* Total Slots */}
-                                        <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+                                        <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-4">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <div className="w-10 h-10 bg-blue-200 rounded-lg flex items-center justify-center">
+                                                <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center">
                                                     <span className="text-lg">🅿️</span>
                                                 </div>
-                                                <span className="text-3xl font-bold text-blue-600">
+                                                <span className="text-3xl font-bold text-slate-700">
                                                     {location.totalSlots || 0}
                                                 </span>
                                             </div>
@@ -160,14 +160,14 @@ export default function ManageLocations() {
                                     <div className="grid grid-cols-3 gap-3">
                                         <button
                                             onClick={() => handleEdit(location)}
-                                            className="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+                                            className="bg-slate-700 hover:bg-slate-800 text-white py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
                                         >
                                             <span>✏️</span>
                                             <span>Edit</span>
                                         </button>
                                         <button
                                             onClick={() => navigate('/admin/slots', { state: { selectedLocationId: location.id } })}
-                                            className="bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+                                            className="bg-slate-600 hover:bg-slate-700 text-white py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
                                         >
                                             <span>👁️</span>
                                             <span>View Slots</span>

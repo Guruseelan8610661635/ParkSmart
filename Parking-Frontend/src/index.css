@@ -100,6 +100,36 @@
   .badge-info {
     @apply badge-shuttle bg-gradient-to-r from-blue-500 to-cyan-600 text-white;
   }
+
+  /* Admin muted theme overrides */
+  .admin-theme .badge-info {
+    @apply badge-shuttle bg-gradient-to-r from-slate-600 to-slate-500 text-white;
+  }
+
+  .admin-theme .btn-primary {
+    @apply bg-gradient-to-r from-slate-700 to-slate-600 text-white hover:from-slate-800 hover:to-slate-700 hover:shadow-lg;
+  }
+
+  .admin-theme .btn-shuttle {
+    @apply bg-gradient-to-r from-slate-700 to-slate-600 text-white hover:from-slate-800 hover:to-slate-700 hover:shadow-2xl;
+  }
+
+  /* Admin font scale - larger for improved readability */
+  .admin-theme {
+    font-size: 1.125rem; /* ~18px */
+    line-height: 1.45;
+  }
+
+  /* Improve smaller label readability without altering big headings */
+  .admin-theme .text-sm {
+    font-size: 1rem;
+  }
+
+  /* Slight heading scale inside admin */
+  .admin-theme h1 { font-size: 1.75rem; }
+  .admin-theme h2 { font-size: 1.25rem; }
+  .admin-theme h3 { font-size: 1.0625rem; }
+
 }
 
 @keyframes fadeIn {

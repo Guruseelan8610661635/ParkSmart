@@ -11,6 +11,7 @@ import Payments from "./pages/Payments";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageLocations from "./pages/admin/ManageLocations";
 import Reports from "./pages/admin/Reports";
+import AdminProfile from "./pages/admin/AdminProfile";
 
 export default function App() {
   return (
@@ -107,7 +108,7 @@ export default function App() {
             path="/admin/profile"
             element={
               <ProtectedRoute>
-                <AdminDashboard />
+                <AdminProfile />
               </ProtectedRoute>
             }
           />

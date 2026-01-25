@@ -72,13 +72,13 @@ export default function SlotGrid({ slots, onEdit, onToggle, onDelete, onDisable,
       </div>
 
       {/* Auto-refresh toggle */}
-      <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg p-3">
-        <span className="text-[11px] text-blue-700 font-semibold">🔄 Auto-refresh: {autoRefreshEnabled ? "ON" : "OFF"}</span>
+      <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-lg p-3">
+        <span className="text-[11px] text-slate-700 font-semibold">🔄 Auto-refresh: {autoRefreshEnabled ? "ON" : "OFF"}</span>
         <button
           onClick={() => setAutoRefreshEnabled(!autoRefreshEnabled)}
           className={`text-[10px] font-semibold px-3 py-1.5 rounded transition ${
             autoRefreshEnabled
-              ? "bg-blue-500 text-white hover:bg-blue-600"
+              ? "bg-slate-500 text-white hover:bg-slate-600"
               : "bg-gray-300 text-gray-700 hover:bg-gray-400"
           }`}
         >

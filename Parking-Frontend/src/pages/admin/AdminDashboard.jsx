@@ -74,6 +74,8 @@ export default function AdminDashboard() {
   const [slots, setSlots] = useState([]);
   const [locations, setLocations] = useState([]);
   const [users, setUsers] = useState([]);
+  // Search/filter for users list
+  const [userSearch, setUserSearch] = useState("");
   const [currentBookings, setCurrentBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
   const [stats, setStats] = useState({
@@ -541,6 +543,29 @@ export default function AdminDashboard() {
     );
   };
 
+  // User actions
+  const handleEditUser = (user) => {
+    window.alert(`Edit user flow (TODO): ${user?.name || user?.email} (ID: ${user?.id})`);
+  };
+
+  const handleRemoveUser = (user) => {
+    showConfirm(
+      "Remove User",
+      `Are you sure you want to remove ${user.name || user.email}? This action cannot be undone.`,
+      async () => {
+        try {
+          await axios.delete(`/auth/admin/users/${user.id}`);
+          showNotification("success", "✅ User removed");
+          await fetchAllData();
+        } catch (err) {
+          const msg = err.response?.data?.message || err.message || "Failed to remove user";
+          showNotification("error", `❌ ${msg}`);
+        }
+      },
+      null
+    );
+  };
+
   // Helper variables
   const totalSlots = stats.totalSlots || 0;
   const occupiedSlots = stats.occupiedSlots || 0;
@@ -586,19 +611,18 @@ export default function AdminDashboard() {
 
       {/* Header with Shuttle theme */}
       <div className="px-6 pt-6">
-        <div className="max-w-7xl mx-auto glass-card-dark border border-white/20 rounded-3xl shadow-2xl p-8 relative overflow-hidden">
-          {/* Gradient background overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-shuttle-purple-600/20 to-shuttle-teal-600/20 pointer-events-none"></div>
+        <div className="max-w-7xl mx-auto bg-slate-50 border border-slate-100 rounded-3xl shadow-md p-8 relative overflow-hidden">
+
 
           <div className="flex items-center justify-between gap-4 relative z-10">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-1 flex items-center gap-3">
+              <h1 className="text-3xl font-bold text-slate-800 mb-1 flex items-center gap-3">
                 <span className="text-4xl">📊</span>
                 Admin Dashboard
               </h1>
-              <p className="text-shuttle-teal-300 text-base font-medium">Manage parking operations efficiently</p>
+              <p className="text-slate-600 text-base font-medium">Manage parking operations efficiently</p>
             </div>
-            <span className="hidden md:inline-flex px-5 py-2.5 rounded-full bg-gradient-to-r from-shuttle-emerald-600 to-shuttle-teal-600 text-white text-sm font-bold shadow-lg">Desktop View</span>
+            <span className="hidden md:inline-flex px-5 py-2.5 rounded-full bg-slate-600 text-white text-sm font-bold shadow">Desktop View</span>
           </div>
         </div>
       </div>
@@ -676,16 +700,16 @@ export default function AdminDashboard() {
           {activeTab === "dashboard" && (
             <div className="space-y-6 pb-8">
               {/* Page Header */}
-              <div className="bg-gradient-to-r from-purple-300/60 to-teal-300/60 rounded-2xl p-8 mb-6">
+              <div className="bg-slate-50 border border-slate-100 rounded-2xl p-8 mb-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-4xl">📊</span>
-                      <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+                      <h1 className="text-3xl font-bold text-slate-800">Admin Dashboard</h1>
                     </div>
-                    <p className="text-gray-700">Manage parking operations efficiently</p>
+                    <p className="text-slate-600">Manage parking operations efficiently</p>
                   </div>
-                  <span className="px-4 py-2 bg-teal-500 text-white rounded-lg font-medium text-sm">Desktop View</span>
+                  <span className="px-4 py-2 bg-slate-600 text-white rounded-lg font-medium text-sm">Desktop View</span>
                 </div>
               </div>
 
@@ -695,7 +719,7 @@ export default function AdminDashboard() {
                   <span className="text-3xl">📊</span>
                   <h2 className="text-xl font-bold text-gray-800">Parking Occupancy Rate</h2>
                 </div>
-                <p className="text-6xl font-bold text-purple-600 mb-2">
+                <p className="text-6xl font-bold text-slate-700 mb-2">
                   {totalSlots > 0 ? Math.round((occupiedSlots / totalSlots) * 100) : 0}%
                 </p>
                 <p className="text-gray-500">{occupiedSlots} of {totalSlots} slots occupied</p>
@@ -703,25 +727,25 @@ export default function AdminDashboard() {
 
               {/* Stats Grid - Muted Colors */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-teal-400/40 rounded-2xl p-6 text-center">
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 text-center">
                   <span className="text-4xl block mb-2">🅿️</span>
-                  <p className="text-3xl font-bold text-gray-800 mb-1">{stats.availableSlots}</p>
-                  <p className="text-sm font-medium text-gray-700">Available Slots</p>
+                  <p className="text-3xl font-bold text-slate-700 mb-1">{stats.availableSlots}</p>
+                  <p className="text-sm font-medium text-slate-600">Available Slots</p>
                 </div>
-                <div className="bg-purple-300/50 rounded-2xl p-6 text-center">
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 text-center">
                   <span className="text-4xl block mb-2">🚗</span>
-                  <p className="text-3xl font-bold text-gray-800 mb-1">{occupiedSlots}</p>
-                  <p className="text-sm font-medium text-gray-700">Occupied Slots</p>
+                  <p className="text-3xl font-bold text-slate-700 mb-1">{occupiedSlots}</p>
+                  <p className="text-sm font-medium text-slate-600">Occupied Slots</p>
                 </div>
-                <div className="bg-purple-400/40 rounded-2xl p-6 text-center">
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 text-center">
                   <span className="text-4xl block mb-2">🔧</span>
-                  <p className="text-3xl font-bold text-gray-800 mb-1">{stats.maintenanceSlots || 0}</p>
-                  <p className="text-sm font-medium text-gray-700">In Maintenance</p>
+                  <p className="text-3xl font-bold text-slate-700 mb-1">{stats.maintenanceSlots || 0}</p>
+                  <p className="text-sm font-medium text-slate-600">In Maintenance</p>
                 </div>
-                <div className="bg-slate-400/40 rounded-2xl p-6 text-center">
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 text-center">
                   <span className="text-4xl block mb-2">📋</span>
-                  <p className="text-3xl font-bold text-gray-800 mb-1">{currentBookings.length}</p>
-                  <p className="text-sm font-medium text-gray-700">Active Bookings</p>
+                  <p className="text-3xl font-bold text-slate-700 mb-1">{currentBookings.length}</p>
+                  <p className="text-sm font-medium text-slate-600">Active Bookings</p>
                 </div>
               </div>
 
@@ -734,13 +758,13 @@ export default function AdminDashboard() {
                     <span className="text-2xl">🏢</span>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-5 text-white text-center">
-                      <p className="text-sm font-medium mb-2 opacity-90">Total Locations</p>
-                      <p className="text-4xl font-bold">{stats.totalLocations}</p>
+                    <div className="bg-slate-50 border border-slate-100 rounded-lg p-5 text-center">
+                      <p className="text-sm font-medium mb-2 text-slate-600">Total Locations</p>
+                      <p className="text-4xl font-bold text-slate-700">{stats.totalLocations}</p>
                     </div>
-                    <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg p-5 text-white text-center">
-                      <p className="text-sm font-medium mb-2 opacity-90">Total Bookings</p>
-                      <p className="text-4xl font-bold">{stats.totalBookings}</p>
+                    <div className="bg-slate-50 border border-slate-100 rounded-lg p-5 text-center">
+                      <p className="text-sm font-medium mb-2 text-slate-600">Total Bookings</p>
+                      <p className="text-4xl font-bold text-slate-700">{stats.totalBookings}</p>
                     </div>
                   </div>
                 </div>
@@ -759,7 +783,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="bg-gray-100 rounded-full h-2 overflow-hidden">
                         <div
-                          className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full transition-all duration-500"
+                          className="h-full rounded-full transition-all duration-500 bg-slate-500"
                           style={{
                             width: `${totalSlots > 0 ? Math.round((stats.availableSlots / totalSlots) * 100) : 0}%`,
                           }}
@@ -793,7 +817,7 @@ export default function AdminDashboard() {
                     <span className="text-2xl">📅</span>
                     <h3 className="text-lg font-semibold text-gray-900">Active Bookings</h3>
                   </div>
-                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-medium text-sm">{currentBookings.length} Active</span>
+                  <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full font-medium text-sm">{currentBookings.length} Active</span>
                 </div>
                 {currentBookings.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto pr-2">
@@ -1181,112 +1205,148 @@ export default function AdminDashboard() {
           {/* Users Tab */}
           {activeTab === "users" && (
             <div className="space-y-6 pb-20">
-              {/* Header */}
-              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-md">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                      <span className="text-3xl">👥</span>
-                      System Users
-                    </h2>
-                    <p className="text-gray-600 text-sm mt-1">Manage and view all registered users</p>
+              {/* Header - with search and invite CTA */}
+              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-md flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <span className="text-3xl">👥</span>
+                    System Users
+                  </h2>
+                  <p className="text-gray-600 text-sm mt-1">Search, manage and invite users</p>
+                  <p className="text-gray-500 text-sm mt-2">{userSearch ? `${users.filter(u => ((u.name||'').toLowerCase().includes(userSearch.toLowerCase()) || (u.email||'').toLowerCase().includes(userSearch.toLowerCase()) || (u.phone||'').toLowerCase().includes(userSearch.toLowerCase()))).length} of ${users.length} matching` : `${users.length} total users`}</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <input
+                      value={userSearch}
+                      onChange={(e) => setUserSearch(e.target.value)}
+                      placeholder="Search by name, email or phone..."
+                      className="px-4 py-2 border border-gray-200 rounded-lg shadow-sm w-72 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                    />
+                    {userSearch ? (
+                      <button
+                        onClick={() => setUserSearch("")}
+                        className="absolute right-3 top-2 text-gray-500 font-bold"
+                        aria-label="Clear search"
+                      >
+                        ✕
+                      </button>
+                    ) : (
+                      <span className="absolute right-3 top-2 text-gray-400">🔎</span>
+                    )}
                   </div>
-                  <div className="text-right">
-                    <p className="text-4xl font-bold text-blue-600">{users.length}</p>
-                    <p className="text-gray-600 text-sm">Total Users</p>
-                  </div>
+                  <button
+                    className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold"
+                    onClick={() => window.alert('Invite user flow (to be implemented)')}
+                  >
+                    + Invite User
+                  </button>
                 </div>
               </div>
 
-              {/* Users Table/List */}
+              {/* Users Table/List - filtered */}
               {loading ? (
                 <div className="flex items-center justify-center py-16">
                   <p className="text-gray-600 text-lg font-semibold">Loading users...</p>
                 </div>
-              ) : users.length > 0 ? (
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden">
-                  {/* Desktop Table View */}
-                  <div className="hidden md:block overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
-                        <tr>
-                          <th className="px-6 py-4 text-left font-bold text-sm">ID</th>
-                          <th className="px-6 py-4 text-left font-bold text-sm">Name</th>
-                          <th className="px-6 py-4 text-left font-bold text-sm">Email</th>
-                          <th className="px-6 py-4 text-left font-bold text-sm">Phone</th>
-                          <th className="px-6 py-4 text-left font-bold text-sm">Role</th>
-                          <th className="px-6 py-4 text-left font-bold text-sm">Joined Date</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {users.map((user, index) => (
-                          <tr key={user.id} className="hover:bg-blue-50 transition-colors">
-                            <td className="px-6 py-4 text-sm font-semibold text-gray-900">{user.id}</td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full flex items-center justify-center text-white font-bold">
+              ) : (() => {
+                const query = userSearch?.trim().toLowerCase();
+                const filtered = query ? users.filter(u => (
+                  (u.name || '')?.toLowerCase().includes(query) ||
+                  (u.email || '')?.toLowerCase().includes(query) ||
+                  (u.phone || '')?.toLowerCase().includes(query)
+                )) : users;
+
+                return filtered.length > 0 ? (
+                  <div className="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-white border-b border-gray-100 text-slate-700">
+                          <tr>
+                            <th className="px-6 py-4 text-left font-semibold text-sm">Name</th>
+                            <th className="px-6 py-4 text-left font-semibold text-sm">Email</th>
+                            <th className="px-6 py-4 text-left font-semibold text-sm">Phone</th>
+                            <th className="px-6 py-4 text-left font-semibold text-sm">Role</th>
+                            <th className="px-6 py-4 text-left font-semibold text-sm">Joined</th>
+                            <th className="px-6 py-4 text-right font-semibold text-sm">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {filtered.map((user) => (
+                            <tr key={user.id} className="hover:bg-slate-50 transition-colors">
+                              <td className="px-6 py-4 text-sm font-medium flex items-center gap-3">
+                                <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-700 font-semibold">
                                   {user.name?.charAt(0)?.toUpperCase() || 'U'}
                                 </div>
-                                <span className="text-sm font-semibold text-gray-900">{user.name || 'N/A'}</span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-sm text-gray-700">{user.email}</td>
-                            <td className="px-6 py-4 text-sm text-gray-700">{user.phone || 'N/A'}</td>
-                            <td className="px-6 py-4 text-sm">
-                              <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${user.role === 'ADMIN' ? 'bg-red-600' : 'bg-emerald-600'
-                                }`}>
-                                {user.role}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 text-sm text-gray-700">
-                              {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                                <div>
+                                  <div className="text-sm text-slate-800">{user.name || 'N/A'}</div>
+                                  <div className="text-xs text-gray-500">ID: {user.id}</div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-700">{user.email}</td>
+                              <td className="px-6 py-4 text-sm text-gray-700">{user.phone || 'N/A'}</td>
+                              <td className="px-6 py-4 text-sm">
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${user.role === 'ADMIN' ? 'bg-rose-100 text-rose-700' : 'bg-teal-100 text-teal-800'}`}>
+                                  {user.role}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-700">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
+                              <td className="px-6 py-4 text-right text-sm">
+                                <button onClick={() => handleEditUser(user)} className="px-3 py-1 text-slate-700 hover:bg-slate-100 rounded-lg mr-2">Edit</button>
+                                <button onClick={() => handleRemoveUser(user)} className="px-3 py-1 text-rose-600 hover:bg-rose-50 rounded-lg">Remove</button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
 
-                  {/* Mobile Card View */}
-                  <div className="md:hidden space-y-3 p-4">
-                    {users.map((user) => (
-                      <div key={user.id} className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-200 shadow-sm">
-                        <div className="flex items-start gap-4 mb-3">
-                          <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                            {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                    {/* Mobile Card View - Black & White Theme */}
+                    <div className="md:hidden space-y-3 p-4">
+                      {filtered.map((user) => (
+                        <div key={user.id} className="bg-white rounded-xl p-4 border border-black/10 shadow-md">
+                          <div className="flex items-center gap-4 mb-3">
+                            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white font-semibold text-lg">{user.name?.charAt(0)?.toUpperCase() || 'U'}</div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-bold text-slate-900 truncate">{user.name || 'N/A'}</p>
+                              <p className="text-sm text-gray-500 truncate">{user.email}</p>
+                            </div>
+                            <div className="text-right">
+                              <span className={`px-2 py-1 rounded text-xs font-semibold border border-black text-slate-900 bg-white`}>{user.role}</span>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-gray-900 truncate">{user.name || 'N/A'}</p>
-                            <p className="text-sm text-gray-600 truncate">{user.email}</p>
+
+                          <div className="flex items-center gap-2 text-sm">
+                            <button onClick={() => handleEditUser(user)} className="flex-1 px-3 py-2 bg-black text-white rounded-lg shadow-sm">Edit</button>
+                            <button onClick={() => handleRemoveUser(user)} className="flex-1 px-3 py-2 bg-white border border-black text-black rounded-lg">Remove</button>
                           </div>
-                          <span className={`px-2 py-1 rounded-lg text-xs font-bold text-white flex-shrink-0 ${user.role === 'ADMIN' ? 'bg-red-600' : 'bg-emerald-600'
-                            }`}>
-                            {user.role}
-                          </span>
+
+                          <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-600">
+                            <div>
+                              <p className="text-gray-500">Phone</p>
+                              <p className="font-semibold text-slate-900">{user.phone || 'N/A'}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-gray-500">Joined</p>
+                              <p className="font-semibold text-slate-900">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</p>
+                            </div>
+                          </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div>
-                            <p className="text-gray-600">Phone</p>
-                            <p className="font-semibold text-gray-900">{user.phone || 'N/A'}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600">Joined</p>
-                            <p className="font-semibold text-gray-900">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center py-20">
-                  <div className="text-center bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-12 shadow-lg border-2 border-blue-200">
-                    <div className="text-8xl mb-6">👤</div>
-                    <p className="text-gray-600 font-semibold mb-3 text-lg">No users available</p>
-                    <p className="text-gray-500 text-sm">Users will appear here as they register</p>
+                ) : (
+                  <div className="flex items-center justify-center py-20">
+                    <div className="text-center bg-slate-50 rounded-2xl p-12 shadow-md border border-slate-100">
+                      <div className="text-8xl mb-6">👤</div>
+                      <p className="text-gray-600 font-semibold mb-3 text-lg">No users match your search</p>
+                      <p className="text-gray-500 text-sm">Try a different name, email or phone</p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )
+              })() }
             </div>
           )}
 
@@ -1294,21 +1354,21 @@ export default function AdminDashboard() {
           {activeTab === "profile" && (
             <div className="space-y-4 pb-20">
               {/* Admin Profile Card - Enhanced */}
-              <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-cyan-800 rounded-3xl p-8 shadow-2xl text-white border-2 border-blue-500">
+              <div className="bg-gradient-to-br from-slate-700 via-slate-600 to-slate-500 rounded-3xl p-8 shadow-2xl text-white border-2 border-slate-700">
                 <div className="flex items-center gap-6 mb-6">
                   <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg">
                     <span className="text-4xl">👤</span>
                   </div>
                   <div>
                     <h2 className="text-3xl font-bold">{localStorage.getItem("name") || "Administrator"}</h2>
-                    <p className="text-blue-100 text-base mt-1">{localStorage.getItem("email") || "admin@smartparking.com"}</p>
+                    <p className="text-slate-100 text-base mt-1">{localStorage.getItem("email") || "admin@smartparking.com"}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30 shadow-lg">
                   <div>
-                    <p className="text-blue-100 text-xs font-bold mb-2 tracking-widest uppercase">Role</p>
-                    <span className="bg-white text-blue-700 px-4 py-2 rounded-xl text-sm font-bold shadow-lg inline-block">
+                    <p className="text-slate-100 text-xs font-bold mb-2 tracking-widest uppercase">Role</p>
+                    <span className="bg-white text-slate-700 px-4 py-2 rounded-xl text-sm font-bold shadow-lg inline-block">
                       {localStorage.getItem("role") || "ADMIN"}
                     </span>
                   </div>
@@ -1321,7 +1381,7 @@ export default function AdminDashboard() {
 
               {/* Account Details Card */}
               <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-gray-200">
-                <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 px-8 py-6 shadow-lg">
+                <div className="bg-gradient-to-r from-slate-700 via-slate-600 to-slate-500 px-8 py-6 shadow-lg">
                   <h3 className="font-bold text-white text-2xl flex items-center gap-3">
                     <span className="text-3xl">📋</span>
                     Account Details
@@ -1383,7 +1443,7 @@ export default function AdminDashboard() {
                   setEditingLocation(null);
                   setShowLocationModal(true);
                 }}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-5 rounded-2xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 text-lg"
+                className="w-full bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white py-5 rounded-2xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 text-lg"
               >
                 <span className="text-lg">➕</span>
                 <span>Add New Location</span>
@@ -1393,8 +1453,8 @@ export default function AdminDashboard() {
               {loading ? (
                 <div className="flex items-center justify-center py-32">
                   <div className="text-center">
-                    <div className="w-20 h-20 border-4 border-blue-200 border-t-blue-700 rounded-full animate-spin mx-auto mb-6 shadow-lg"></div>
-                    <p className="text-blue-700 text-xl font-bold">Loading locations...</p>
+                    <div className="w-20 h-20 border-4 border-slate-200 border-t-slate-700 rounded-full animate-spin mx-auto mb-6 shadow-lg"></div>
+                    <p className="text-slate-700 text-xl font-bold">Loading locations...</p>
                     <p className="text-gray-500 text-sm mt-2">Please wait while we fetch your data</p>
                   </div>
                 </div>
@@ -1409,7 +1469,7 @@ export default function AdminDashboard() {
                     return (
                       <div key={location.id} className="flex flex-col bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
                         {/* Location Header - Simplified */}
-                        <div className="bg-blue-600 text-white p-6">
+                        <div className="bg-slate-700 text-white p-6">
                           <div className="flex justify-between items-start">
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
@@ -1419,8 +1479,8 @@ export default function AdminDashboard() {
                                 <h3 className="font-bold text-xl text-white leading-snug">{location.name}</h3>
                               </div>
                               <div className="flex items-start gap-2">
-                                <span className="text-blue-100 mt-1">📍</span>
-                                <p className="text-sm text-blue-50 leading-relaxed">{location.address || "No address provided"}</p>
+                                <span className="text-slate-100 mt-1">📍</span>
+                                <p className="text-sm text-slate-50 leading-relaxed">{location.address || "No address provided"}</p>
                               </div>
                             </div>
                           </div>
@@ -1428,13 +1488,13 @@ export default function AdminDashboard() {
 
                         {/* Stats Grid */}
                         <div className="grid grid-cols-2 gap-4 p-6 bg-gray-50">
-                          <div className="bg-white rounded-xl p-5 shadow-sm border border-blue-100">
+                          <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
                             <div className="flex items-center gap-3">
-                              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-700">
+                              <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-slate-700">
                                 <span className="text-2xl">🅿️</span>
                               </div>
                               <div>
-                                <p className="text-3xl font-bold text-blue-700 leading-none">{locationSlots.length}</p>
+                                <p className="text-3xl font-bold text-slate-700 leading-none">{locationSlots.length}</p>
                                 <p className="text-xs text-gray-600 font-semibold tracking-wide mt-1">TOTAL SLOTS</p>
                               </div>
                             </div>
@@ -1463,14 +1523,14 @@ export default function AdminDashboard() {
                         <div className="grid grid-cols-3 gap-3 px-6 pb-6 bg-white">
                           <button
                             onClick={() => handleEditLocation(location)}
-                            className="bg-blue-600 text-white py-3 rounded-xl font-semibold shadow-sm hover:shadow-md transition-colors duration-200 flex items-center justify-center gap-2"
+                            className="bg-slate-700 text-white py-3 rounded-xl font-semibold shadow-sm hover:shadow-md transition-colors duration-200 flex items-center justify-center gap-2"
                           >
                             <span className="text-lg">✏️</span>
                             <span className="text-sm">Edit</span>
                           </button>
                           <button
                             onClick={() => setSelectedLocationId(selectedLocationId === location.id ? null : location.id)}
-                            className="bg-cyan-600 text-white py-3 rounded-xl font-semibold shadow-sm hover:shadow-md transition-colors duration-200 flex items-center justify-center gap-2"
+                            className="bg-slate-600 text-white py-3 rounded-xl font-semibold shadow-sm hover:shadow-md transition-colors duration-200 flex items-center justify-center gap-2"
                           >
                             <span className="text-lg">{selectedLocationId === location.id ? '🔼' : '🔽'}</span>
                             <span className="text-sm">{selectedLocationId === location.id ? 'Hide' : 'View'} Slots</span>
@@ -1496,7 +1556,7 @@ export default function AdminDashboard() {
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
                               <div>
                                 <div className="flex items-center gap-2 mb-2">
-                                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-700">
+                                  <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-700">
                                     <span className="text-2xl">📋</span>
                                   </div>
                                   <h4 className="font-bold text-xl text-gray-800">Slots in {location.name}</h4>
@@ -1506,7 +1566,7 @@ export default function AdminDashboard() {
                               {locationSlots.length > 0 && (
                                 <button
                                   onClick={() => handleBulkDeleteSlotsForLocation(location.id)}
-                                  className="bg-red-600 text-white px-4 py-3 rounded-lg font-semibold shadow-sm hover:shadow-md transition-colors duration-200 flex items-center gap-2"
+                                  className="bg-rose-600 text-white px-4 py-3 rounded-lg font-semibold shadow-sm hover:shadow-md transition-colors duration-200 flex items-center gap-2"
                                   title="Delete all slots for this location"
                                 >
                                   <span className="text-lg">🗑️</span>
@@ -1524,15 +1584,15 @@ export default function AdminDashboard() {
                                     ? 'bg-green-50 border-green-200'
                                     : slot.status === "MAINTENANCE"
                                       ? 'bg-purple-50 border-purple-200'
-                                      : 'bg-blue-50 border-blue-200'
+                                      : 'bg-slate-50 border-slate-200'
                                     }`}
                                 >
                                   <div className="flex items-center gap-4 flex-1 min-w-0">
                                     <div className={`w-16 h-16 flex-shrink-0 rounded-xl flex items-center justify-center shadow-md ${slot.status === "AVAILABLE"
                                       ? 'bg-gradient-to-br from-green-500 to-emerald-500'
                                       : slot.status === "MAINTENANCE"
-                                        ? 'bg-gradient-to-br from-purple-500 to-indigo-500'
-                                        : 'bg-gradient-to-br from-blue-500 to-cyan-500'
+                                        ? 'bg-gradient-to-br from-purple-400 to-indigo-500'
+                                        : 'bg-gradient-to-br from-slate-400 to-slate-600'
                                       }`}>
                                       <span className="text-2xl text-white font-bold">🅿️</span>
                                     </div>
@@ -1547,7 +1607,7 @@ export default function AdminDashboard() {
                                         ? 'bg-green-600'
                                         : slot.status === "MAINTENANCE"
                                           ? 'bg-purple-600'
-                                          : 'bg-blue-600'
+                                          : 'bg-slate-600'
                                         }`}
                                     >
                                       {slot.status === "AVAILABLE" ? 'Available' : slot.status === "MAINTENANCE" ? 'Maintenance' : 'Occupied'}
@@ -1558,14 +1618,14 @@ export default function AdminDashboard() {
                                         setActiveTab('slots');
                                         setShowSlotModal(true);
                                       }}
-                                      className="p-3 text-blue-600 hover:bg-blue-100 hover:text-blue-700 rounded-lg transition-colors duration-150"
+                                      className="p-3 text-slate-600 hover:bg-slate-100 hover:text-slate-700 rounded-lg transition-colors duration-150"
                                       title="Edit slot"
                                     >
                                       <span className="text-xl">✏️</span>
                                     </button>
                                     <button
                                       onClick={() => handleConfirmDelete(slot)}
-                                      className="p-3 text-red-600 hover:bg-red-100 hover:text-red-700 rounded-lg transition-colors duration-150"
+                                      className="p-3 text-rose-600 hover:bg-rose-100 hover:text-rose-700 rounded-lg transition-colors duration-150"
                                       title="Delete slot"
                                     >
                                       <span className="text-xl">🗑️</span>
@@ -1592,7 +1652,7 @@ export default function AdminDashboard() {
 
                         {/* Empty Slots Message */}
                         {selectedLocationId === location.id && locationSlots.length === 0 && (
-                          <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg mx-6 mb-6 p-6 border-2 border-yellow-200 text-center">
+                          <div className="bg-slate-50 rounded-lg mx-6 mb-6 p-6 border-2 border-slate-100 text-center">
                             <div className="text-6xl mb-4">📭</div>
                             <p className="text-lg text-gray-700 font-semibold mb-4">No slots in this location</p>
                             <button
@@ -1601,7 +1661,7 @@ export default function AdminDashboard() {
                                 setShowSlotModal(true);
                                 setActiveTab('slots');
                               }}
-                              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-md transition-all"
+                              className="bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white px-6 py-3 rounded-xl font-bold shadow-md transition-all"
                             >
                               ➕ Create First Slot
                             </button>

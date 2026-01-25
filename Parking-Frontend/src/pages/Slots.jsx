@@ -69,19 +69,19 @@ export default function Slots() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pb-24">
+    <div className="min-h-screen bg-gray-50 pb-24">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-6 py-6 shadow-lg">
+      <div className="bg-white px-6 py-6 shadow-md mb-6 rounded-2xl border border-gray-100">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center shadow-lg">
+          <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg border border-gray-100">
             <span className="text-3xl">🅿️</span>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Parking Slots</h1>
+            <h1 className="text-2xl font-bold text-slate-900">Parking Slots</h1>
             {locationName ? (
-              <p className="text-sm text-indigo-100 font-semibold">📍 {locationName}</p>
+              <p className="text-sm text-gray-600 font-semibold">📍 {locationName}</p>
             ) : (
-              <p className="text-sm text-indigo-100">Select a slot to book</p>
+              <p className="text-sm text-gray-600">Select a slot to book</p>
             )}
           </div>
         </div>
@@ -89,14 +89,14 @@ export default function Slots() {
 
       <div className="px-6 py-6 space-y-6">
         {error && (
-          <div className="bg-gradient-to-r from-red-500 to-pink-600 text-white p-5 rounded-2xl shadow-lg border border-red-300">
-            <p className="font-semibold text-sm mb-3 flex items-center gap-2">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-red-100">
+            <p className="font-semibold text-sm mb-3 flex items-center gap-2 text-rose-700">
               <span className="text-xl">⚠️</span>
               {error}
             </p>
             <button
               onClick={fetchSlots}
-              className="bg-white text-red-600 hover:bg-red-50 px-5 py-2 rounded-xl font-semibold transition shadow-md"
+              className="bg-white border border-red-600 text-red-600 px-5 py-2 rounded-xl font-semibold transition shadow-sm"
             >
               🔄 Try Again
             </button>
@@ -133,7 +133,7 @@ export default function Slots() {
             onClick={() => setFilterAvailable("all")}
             className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
               filterAvailable === "all"
-                ? "bg-blue-600 text-white"
+                ? "bg-black text-white"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
@@ -185,58 +185,87 @@ export default function Slots() {
             </p>
           </div>
         ) : (
-          <div className="bg-white p-6 rounded-2xl border border-gray-200">
-            <div className="grid grid-cols-4 gap-3">
-              {filteredSlots.map((slot) => (
-                <div key={slot.id} className="relative group">
-                  <button
-                    onClick={() => {
-                      const isDisabled = slot.isDisabled === true;
-                      if (isDisabled && slot.maintenanceNotes) {
-                        setSelectedMaintSlot(slot);
-                      } else if (slot.available && !isDisabled) {
-                        setSelectedSlot(slot);
-                      }
-                    }}
-                    className={`w-full aspect-square rounded-lg flex flex-col items-center justify-center font-bold transition-all ${
-                      slot.isDisabled === true
-                        ? "bg-orange-100 text-orange-700 cursor-pointer border-2 border-orange-300 hover:bg-orange-200"
-                        : slot.available
-                        ? "bg-green-100 text-green-700 hover:bg-green-200 cursor-pointer border-2 border-green-300"
-                        : "bg-red-100 text-red-600 cursor-not-allowed opacity-60 border-2 border-red-300"
-                    }`}
-                    disabled={!slot.available && slot.isDisabled !== true}
-                    title={slot.isDisabled === true ? "Click to view full maintenance details" : slot.available ? "Click to book" : "Occupied"}
-                  >
-                    <span className="text-lg">{slot.slotNumber}</span>
-                    <span className="text-2xl mt-1">
-                      {slot.isDisabled === true ? (
-                        <span className="animate-pulse">⚠️</span>
-                      ) : slot.available ? "🟢" : "🔴"}
-                    </span>
-                  </button>
+          <>
+            {/* Desktop Grid */}
+            <div className="hidden md:block bg-white p-6 rounded-2xl border border-gray-200">
+              <div className="grid grid-cols-4 gap-3">
+                {filteredSlots.map((slot) => (
+                  <div key={slot.id} className="relative group">
+                    <button
+                      onClick={() => {
+                        const isDisabled = slot.isDisabled === true;
+                        if (isDisabled && slot.maintenanceNotes) {
+                          setSelectedMaintSlot(slot);
+                        } else if (slot.available && !isDisabled) {
+                          setSelectedSlot(slot);
+                        }
+                      }}
+                      className={`w-full aspect-square rounded-lg flex flex-col items-center justify-center font-bold transition-all ${
+                        slot.isDisabled === true
+                          ? "bg-orange-100 text-orange-700 cursor-pointer border-2 border-orange-300 hover:bg-orange-200"
+                          : slot.available
+                          ? "bg-green-100 text-green-700 hover:bg-green-200 cursor-pointer border-2 border-green-300"
+                          : "bg-red-100 text-red-600 cursor-not-allowed opacity-60 border-2 border-red-300"
+                      }`}
+                      disabled={!slot.available && slot.isDisabled !== true}
+                      title={slot.isDisabled === true ? "Click to view full maintenance details" : slot.available ? "Click to book" : "Occupied"}
+                    >
+                      <span className="text-lg">{slot.slotNumber}</span>
+                      <span className="text-2xl mt-1">
+                        {slot.isDisabled === true ? (
+                          <span className="animate-pulse">⚠️</span>
+                        ) : slot.available ? "🟢" : "🔴"}
+                      </span>
+                    </button>
                   
-                  {/* Maintenance Hover Tooltip */}
-                  {slot.isDisabled === true && slot.maintenanceNotes && (
-                    <div className="absolute left-1/2 transform -translate-x-1/2 z-50 pointer-events-none group-hover:z-50">
-                      <div className="bottom-full mb-2 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-orange-400">
-                        <div className="font-bold text-orange-300 mb-1">
-                          🔧 Under Maintenance
-                        </div>
-                        <div className="text-gray-100 leading-relaxed">
-                          {slot.maintenanceNotes}
-                        </div>
-                        {/* Arrow pointer */}
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
-                          <div className="border-t-8 border-l-4 border-r-4 border-t-gray-800 border-l-transparent border-r-transparent"></div>
+                    {/* Maintenance Hover Tooltip */}
+                    {slot.isDisabled === true && slot.maintenanceNotes && (
+                      <div className="absolute left-1/2 transform -translate-x-1/2 z-50 pointer-events-none group-hover:z-50">
+                        <div className="bottom-full mb-2 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-orange-400">
+                          <div className="font-bold text-orange-300 mb-1">
+                            🔧 Under Maintenance
+                          </div>
+                          <div className="text-gray-100 leading-relaxed">
+                            {slot.maintenanceNotes}
+                          </div>
+                          {/* Arrow pointer */}
+                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                            <div className="border-t-8 border-l-4 border-r-4 border-t-gray-800 border-l-transparent border-r-transparent"></div>
+                          </div>
                         </div>
                       </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile List - B/W */}
+            <div className="md:hidden space-y-3">
+              {filteredSlots.map((slot) => (
+                <div key={slot.id} className="bg-white rounded-xl p-4 border border-black/10 shadow-md flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-md flex items-center justify-center text-white font-semibold ${slot.isDisabled ? 'bg-orange-700' : slot.available ? 'bg-black' : 'bg-red-700'}`}>
+                      {slot.slotNumber}
                     </div>
-                  )}
+                    <div>
+                      <p className="font-bold text-slate-900">Slot {slot.slotNumber}</p>
+                      <p className="text-xs text-gray-500">{slot.slotType || 'Standard'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {slot.isDisabled ? (
+                      <button onClick={() => setSelectedMaintSlot(slot)} className="px-3 py-2 bg-white border border-black text-black rounded-lg">Notes</button>
+                    ) : slot.available ? (
+                      <button onClick={() => setSelectedSlot(slot)} className="px-3 py-2 bg-black text-white rounded-lg">Book</button>
+                    ) : (
+                      <div className="text-xs text-gray-500">Occupied</div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
+          </>
         )}
 
         {/* Legend */}
@@ -298,7 +327,7 @@ export default function Slots() {
 
             <button
               onClick={() => setSelectedMaintSlot(null)}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              className="w-full bg-black hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
             >
               Close
             </button>

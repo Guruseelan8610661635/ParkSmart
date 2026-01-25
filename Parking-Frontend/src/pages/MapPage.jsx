@@ -156,22 +156,20 @@ function MapPage() {
   };
 
   const getOccupancyColor = (occupancyPercentage) => {
-    if (occupancyPercentage < 30) return 'bg-green-500';
-    if (occupancyPercentage < 70) return 'bg-orange-500';
-    return 'bg-red-500';
+    // Use neutral filler for occupancy bar to match B/W theme
+    return 'bg-gray-400';
   };
 
   const getOccupancyBgColor = (occupancyPercentage) => {
-    if (occupancyPercentage < 30) return 'bg-green-50 border-green-200';
-    if (occupancyPercentage < 70) return 'bg-orange-50 border-orange-200';
-    return 'bg-red-50 border-red-200';
+    // Keep card backgrounds neutral and use subtle gray borders for B/W look
+    return 'bg-white border-gray-100';
   };
 
   if (loading && locations.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center pb-24">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pb-24">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-3"></div>
+          <div className="w-16 h-16 border-4 border-gray-200 border-t-slate-600 rounded-full animate-spin mx-auto mb-3"></div>
           <p className="text-gray-600 font-semibold">Loading locations...</p>
         </div>
       </div>
@@ -179,20 +177,20 @@ function MapPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pb-24">
+    <div className="min-h-screen bg-gray-50 pb-24">
       {/* Enhanced Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-6 py-6 shadow-lg mb-5">
+      <div className="bg-white px-6 py-6 shadow-md mb-5 rounded-2xl border border-gray-100">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg border border-gray-100">
               <span className="text-3xl">🗺️</span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Parking Map</h1>
-              <p className="text-sm text-indigo-100\">Find nearby parking spots</p>
+              <h1 className="text-2xl font-bold text-slate-900">Parking Map</h1>
+              <p className="text-sm text-gray-600">Find nearby parking spots</p>
             </div>
           </div>
-          <div className="flex gap-1 bg-white/20 backdrop-blur-sm p-1 rounded-lg">
+          <div className="flex gap-1 bg-white p-1 rounded-lg border border-gray-100">
             <button
               onClick={() => setMapViewMode('list')}
               className={`px-3 py-2 rounded-lg text-xs font-bold transition ${ mapViewMode === 'list' ? 'bg-white text-purple-600 shadow-md' : 'text-white' }`}
@@ -232,14 +230,14 @@ function MapPage() {
         <div className="mb-5 grid grid-cols-2 gap-3">
           <button
             onClick={handleFindNearby}
-            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-3 rounded-xl transition text-sm font-bold shadow-lg flex items-center justify-center gap-2"
+            className="bg-black hover:bg-black text-white px-4 py-3 rounded-xl transition text-sm font-bold shadow-sm flex items-center justify-center gap-2"
           >
             <span>📍</span>
             Near Me
           </button>
           <button
             onClick={() => { setShowNearby(false); loadLocations(); }}
-            className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-4 py-3 rounded-xl transition text-sm font-bold shadow-lg flex items-center justify-center gap-2"
+            className="bg-white border border-gray-200 px-4 py-3 rounded-xl transition text-sm font-bold shadow-sm flex items-center justify-center gap-2"
           >
             <span>⭐</span>
             All
@@ -248,7 +246,7 @@ function MapPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-5 bg-gradient-to-r from-red-500 to-pink-600 text-white p-5 rounded-2xl shadow-lg border border-red-300">
+          <div className="mb-5 bg-white p-5 rounded-2xl shadow-sm border border-red-100">
             <p className="font-semibold text-sm mb-3 flex items-center gap-2">
               <span className="text-xl">⚠️</span>
               {error}
@@ -256,14 +254,14 @@ function MapPage() {
             <div className="flex gap-3">
               <button
                 onClick={loadLocations}
-                className="bg-white text-red-600 hover:bg-red-50 px-5 py-2 rounded-xl font-semibold transition shadow-md"
+                className="bg-black hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-semibold transition shadow-md"
               >
                 🔄 Retry
               </button>
               {error.includes('log in again') && (
                 <button
                   onClick={() => navigate('/')}
-                  className="bg-white text-blue-600 hover:bg-blue-50 px-5 py-2 rounded-xl font-semibold transition shadow-md"
+                  className="bg-white border border-gray-200 text-slate-900 px-5 py-2 rounded-xl font-semibold transition shadow-md"
                 >
                   🔑 Go to Login
                 </button>
@@ -274,8 +272,8 @@ function MapPage() {
       </div>
 
       {/* Location Count Badge */}
-      <div className="mx-6 mt-4 p-4 bg-white rounded-lg border-2 border-blue-200 shadow-sm inline-block">
-        <p className="text-sm font-bold text-blue-700">
+      <div className="mx-6 mt-4 p-4 bg-white rounded-lg border-2 border-gray-200 shadow-sm inline-block">
+        <p className="text-sm font-bold text-slate-900">
           📍 {locations.length} {showNearby ? 'nearby ' : ''}location{locations.length !== 1 ? 's' : ''}
         </p>
       </div>
@@ -306,132 +304,111 @@ function MapPage() {
 
       {/* Locations List (only in list view) */}
       {mapViewMode === 'list' && (
-        <>
-          <div className="px-6 py-4 space-y-4">
-            {locations.length === 0 ? (
-              <div className="bg-white p-10 rounded-2xl border-2 border-dashed border-purple-300 text-center">
-                <p className="text-5xl mb-4">🏙️</p>
-                <p className="text-gray-600 font-semibold">No locations found</p>
-                <p className="text-gray-500 text-sm mt-1">Try a different search or location</p>
-              </div>
-            ) : (
-              locations.map(location => (
-                <div
-                  key={location.id}
-                  className={`bg-white p-6 rounded-2xl border-2 shadow-md hover:shadow-lg transition cursor-pointer ${getOccupancyBgColor(
-                    location.occupancyPercentage || 0
-                  )}`}
-                  onClick={() => handleLocationClick(location)}
-                >
-                  {/* Location Header */}
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900">{location.name}</h3>
-                      <p className="text-xs text-gray-600 mt-2">📍 {location.address}</p>
+        <div className="px-6 py-4 space-y-4">
+          {locations.length === 0 ? (
+            <div className="bg-white p-10 rounded-2xl border-2 border-dashed border-gray-300 text-center">
+              <p className="text-5xl mb-4">🏙️</p>
+              <p className="text-gray-600 font-semibold">No locations found</p>
+              <p className="text-gray-500 text-sm mt-1">Try a different search or location</p>
+            </div>
+          ) : (
+            <>
+              {/* Desktop List */}
+              <div className="hidden md:block space-y-4">
+                {locations.map((location) => (
+                  <div
+                    key={location.id}
+                    className={`bg-white p-6 rounded-2xl border-2 shadow-md hover:shadow-lg transition cursor-pointer ${getOccupancyBgColor(
+                      location.occupancyPercentage || 0
+                    )}`}
+                    onClick={() => handleLocationClick(location)}
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-gray-900">{location.name}</h3>
+                        <p className="text-xs text-gray-600 mt-2">📍 {location.address}</p>
+                      </div>
+                      <span className="text-2xl font-bold text-slate-900">{Math.round(location.occupancyPercentage || 0)}%</span>
                     </div>
-                    <span className={`text-2xl font-bold ${
-                      location.occupancyPercentage < 30 ? 'text-green-600' :
-                      location.occupancyPercentage < 70 ? 'text-orange-600' :
-                      'text-red-600'
-                    }`}>
-                      {Math.round(location.occupancyPercentage || 0)}%
-                    </span>
-                  </div>
 
-                  {/* Availability Bar */}
-                  <div className="mb-4">
-                    <div className="flex justify-between text-xs font-semibold mb-2">
-                      <span className="text-gray-700">Availability</span>
-                      <span className="text-green-600">
-                        {location.availableSlots}/{location.totalSlots} slots
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-300 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full transition-all ${getOccupancyColor(
-                          location.occupancyPercentage || 0
-                        )}`}
-                        style={{ width: `${location.occupancyPercentage || 0}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Amenities */}
-                  {location.amenities && (
                     <div className="mb-4">
-                      <p className="text-xs font-semibold text-gray-700 mb-3">🎯 Amenities:</p>
-                      <div className="flex flex-wrap gap-3">
-                        {location.amenities.split(',').map((amenity, index) => (
-                          <span
-                            key={index}
-                            className="text-xs bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full font-semibold"
-                          >
-                            {amenity.trim()}
-                          </span>
-                        ))}
+                      <div className="flex justify-between text-xs font-semibold mb-2">
+                        <span className="text-gray-700">Availability</span>
+                        <span className="text-gray-700">{location.availableSlots}/{location.totalSlots} slots</span>
+                      </div>
+                      <div className="w-full bg-gray-300 rounded-full h-2">
+                        <div className={`h-2 rounded-full transition-all ${getOccupancyColor(location.occupancyPercentage || 0)}`} style={{ width: `${location.occupancyPercentage || 0}%` }} />
                       </div>
                     </div>
-                  )}
 
-                  {/* Operating Hours & Distance */}
-                  <div className="flex justify-between items-center text-xs text-gray-600 mb-4 pb-4 border-t border-gray-200">
-                    <span>⏰ {location.operatingHours}</span>
-                    {location.distance && (
-                      <span className="text-blue-600 font-semibold">
-                        📏 {location.distance.toFixed(2)} km away
-                      </span>
+                    {location.amenities && (
+                      <div className="mb-4">
+                        <p className="text-xs font-semibold text-gray-700 mb-3">🎯 Amenities:</p>
+                        <div className="flex flex-wrap gap-3">
+                          {location.amenities.split(',').map((amenity, index) => (
+                            <span key={index} className="text-xs bg-gray-100 text-slate-700 px-3 py-1.5 rounded-full font-semibold border border-gray-200">{amenity.trim()}</span>
+                          ))}
+                        </div>
+                      </div>
                     )}
-                  </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex gap-3">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRefreshLocation(location.id);
-                      }}
-                      disabled={refreshing}
-                      className="flex-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded-lg transition disabled:opacity-50"
-                    >
-                      {refreshing ? '⏳ Refreshing...' : '🔄 Refresh'}
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Set location ID before navigating
-                        localStorage.setItem('selectedLocationId', location.id);
-                        localStorage.setItem('selectedLocationName', location.name);
-                        navigate('/slots', { state: { locationId: location.id } });
-                      }}
-                      className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:shadow-lg text-white text-xs font-bold rounded-lg transition"
-                    >
-                      🅿️ View Slots
-                    </button>
+                    <div className="flex justify-between items-center text-xs text-gray-600 mb-4 pb-4 border-t border-gray-200">
+                      <span>⏰ {location.operatingHours}</span>
+                      {location.distance && <span className="text-slate-900 font-semibold">📏 {location.distance.toFixed(2)} km away</span>}
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button onClick={(e) => { e.stopPropagation(); handleRefreshLocation(location.id); }} disabled={refreshing} className="flex-1 px-3 py-2 bg-black hover:bg-gray-900 text-white text-xs font-bold rounded-lg transition disabled:opacity-50">{refreshing ? '⏳ Refreshing...' : '🔄 Refresh'}</button>
+                      <button onClick={(e) => { e.stopPropagation(); localStorage.setItem('selectedLocationId', location.id); localStorage.setItem('selectedLocationName', location.name); navigate('/slots', { state: { locationId: location.id } }); }} className="flex-1 px-3 py-2 bg-black hover:bg-black text-white text-xs font-bold rounded-lg transition">🅿️ View Slots</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Mobile List */}
+              <div className="md:hidden space-y-3">
+                {locations.map((location) => (
+                  <div key={location.id} className="bg-white rounded-xl p-4 border border-black/10 shadow-md">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-sm font-bold text-slate-900">{location.name}</h3>
+                        <p className="text-xs text-gray-500 mt-1">📍 {location.address}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-slate-900">{Math.round(location.occupancyPercentage || 0)}%</p>
+                        <p className="text-xs text-gray-500 mt-1">{location.availableSlots}/{location.totalSlots}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button onClick={(e) => { e.stopPropagation(); handleRefreshLocation(location.id); }} className="flex-1 px-3 py-2 bg-white border border-black text-black rounded-lg">Refresh</button>
+                      <button onClick={(e) => { e.stopPropagation(); localStorage.setItem('selectedLocationId', location.id); localStorage.setItem('selectedLocationName', location.name); navigate('/slots', { state: { locationId: location.id } }); }} className="flex-1 px-3 py-2 bg-black text-white rounded-lg">View Slots</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Legend */}
+              <div className="mx-6 mt-6 p-4 bg-white rounded-2xl border-2 border-gray-200 shadow-md">
+                <p className="text-xs font-bold text-gray-900 mb-3">📊 Occupancy Legend:</p>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-slate-400 rounded-full"></div>
+                    <span className="text-xs text-gray-700 font-semibold">&lt; 30% - Available (Good)</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                    <span className="text-xs text-gray-700 font-semibold">30-70% - Medium (Moderate)</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-slate-400 rounded-full"></div>
+                    <span className="text-xs text-gray-700 font-semibold">&gt; 70% - Almost Full</span>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
-
-          {/* Legend */}
-          <div className="mx-6 mt-6 p-4 bg-white rounded-2xl border-2 border-gray-200 shadow-md">
-            <p className="text-xs font-bold text-gray-900 mb-3">📊 Occupancy Legend:</p>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-xs text-gray-700 font-semibold">&lt; 30% - Available (Good)</span>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                <span className="text-xs text-gray-700 font-semibold">30-70% - Medium (Moderate)</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-xs text-gray-700 font-semibold">&gt; 70% - Almost Full</span>
-              </div>
-            </div>
-          </div>
-        </>
+            </>
+          )}
+        </div>
       )}
 
       {/* Location Details Panel */}
@@ -482,7 +459,7 @@ function MapPage() {
                   {selectedLocation.amenities.split(',').map((amenity, index) => (
                     <span
                       key={index}
-                      className="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full font-semibold"
+                      className="text-xs bg-gray-100 text-slate-700 px-3 py-1 rounded-full font-semibold border border-gray-200"
                     >
                       {amenity.trim()}
                     </span>
@@ -497,7 +474,7 @@ function MapPage() {
                 setSelectedLocation(null);
                 navigate('/slots', { state: { locationId: selectedLocation.id } });
               }}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold rounded-lg hover:shadow-lg transition"
+              className="w-full py-3 bg-black text-white font-bold rounded-lg hover:shadow-md transition"
             >
               🅿️ View Available Slots
             </button>

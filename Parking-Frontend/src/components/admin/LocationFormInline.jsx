@@ -104,7 +104,7 @@ export default function LocationFormInline({ location, onSubmit, onClose }) {
               setFormData({ ...formData, name: e.target.value })
             }
             disabled={isLoading}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100 text-base"
           />
         </div>
 
@@ -120,7 +120,7 @@ export default function LocationFormInline({ location, onSubmit, onClose }) {
               setFormData({ ...formData, address: e.target.value })
             }
             disabled={isLoading}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base resize-none h-20"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100 text-base resize-none h-20"
           />
         </div>
 
@@ -138,7 +138,7 @@ export default function LocationFormInline({ location, onSubmit, onClose }) {
               setFormData({ ...formData, latitude: e.target.value ? parseFloat(e.target.value) : "" })
             }
             disabled={isLoading}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100 text-base"
           />
         </div>
 
@@ -156,7 +156,7 @@ export default function LocationFormInline({ location, onSubmit, onClose }) {
               setFormData({ ...formData, longitude: e.target.value ? parseFloat(e.target.value) : "" })
             }
             disabled={isLoading}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100 text-base"
           />
         </div>
 
@@ -172,7 +172,7 @@ export default function LocationFormInline({ location, onSubmit, onClose }) {
               setFormData({ ...formData, description: e.target.value })
             }
             disabled={isLoading}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base resize-none h-16"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100 text-base resize-none h-16"
           />
         </div>
       </div>
@@ -182,7 +182,7 @@ export default function LocationFormInline({ location, onSubmit, onClose }) {
         <button
           onClick={handleSubmit}
           disabled={isLoading}
-          className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-semibold py-2.5 rounded-lg transition text-base"
+          className="flex-1 bg-slate-700 hover:bg-slate-800 disabled:bg-gray-400 text-white font-semibold py-2.5 rounded-lg transition text-base"
         >
           {isLoading ? "⏳ Saving..." : "💾 Save Location"}
         </button>

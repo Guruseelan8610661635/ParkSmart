@@ -101,7 +101,7 @@ export default function SlotFormInline({ slot, locations, onSubmit, onClose }) {
               setFormData({ ...formData, slotNumber: e.target.value })
             }
             disabled={isLoading}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100 text-base"
           />
         </div>
 
@@ -116,7 +116,7 @@ export default function SlotFormInline({ slot, locations, onSubmit, onClose }) {
               setFormData({ ...formData, locationId: e.target.value })
             }
             disabled={isLoading}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100 text-base"
           >
             <option value="">Select a location</option>
             {locations.map((loc) => (
@@ -138,7 +138,7 @@ export default function SlotFormInline({ slot, locations, onSubmit, onClose }) {
               setFormData({ ...formData, slotType: e.target.value })
             }
             disabled={isLoading}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 disabled:bg-gray-100 text-base"
           >
             <option value="CAR">🚗 Car</option>
             <option value="BIKE">🏍️ Bike</option>
@@ -153,7 +153,7 @@ export default function SlotFormInline({ slot, locations, onSubmit, onClose }) {
         <button
           onClick={handleSubmit}
           disabled={isLoading}
-          className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-semibold py-2.5 rounded-lg transition text-base"
+          className="flex-1 bg-slate-700 hover:bg-slate-800 disabled:bg-gray-400 text-white font-semibold py-2.5 rounded-lg transition text-base"
         >
           {isLoading ? "⏳ Saving..." : "💾 Save Slot"}
         </button>

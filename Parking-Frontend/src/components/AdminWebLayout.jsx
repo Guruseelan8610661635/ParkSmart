@@ -8,7 +8,7 @@ export default function AdminWebLayout({ children }) {
       to={to}
       className={({ isActive }) =>
         `flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-sm font-medium ${isActive
-          ? "bg-blue-600 text-white"
+          ? "bg-slate-700 text-white"
           : "text-gray-600 hover:bg-gray-100"
         }`
       }
@@ -23,13 +23,13 @@ export default function AdminWebLayout({ children }) {
   );
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 admin-theme">
       {/* Sidebar - Fixed/Sticky */}
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0 bottom-0 z-30">
         {/* Logo */}
         <div className="p-6 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-blue-600 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-lg bg-slate-700 flex items-center justify-center">
               <span className="text-white font-bold text-lg">P</span>
             </div>
             <div>
@@ -61,7 +61,7 @@ export default function AdminWebLayout({ children }) {
         {/* User Section - Always visible at bottom */}
         <div className="p-4 border-t border-gray-200 flex-shrink-0">
           <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-white font-semibold">
               A
             </div>
             <div className="flex-1 min-w-0">
@@ -71,7 +71,7 @@ export default function AdminWebLayout({ children }) {
           </div>
         </div>
       </aside>
-
+    
       {/* Main Content - Offset by sidebar width */}
       <div className="flex-1 flex flex-col ml-64">
         {/* Top Bar */}
@@ -93,7 +93,7 @@ export default function AdminWebLayout({ children }) {
               <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
                 🔔
               </button>
-              <button className="px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors font-medium">
+              <button className="px-4 py-2 text-sm bg-slate-700 text-white hover:bg-slate-800 rounded-lg transition-colors font-medium">
                 + New Booking
               </button>
             </div>

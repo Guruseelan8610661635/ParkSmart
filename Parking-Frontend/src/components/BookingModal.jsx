@@ -59,11 +59,12 @@ export default function BookingModal({ slot, onClose, onBooked }) {
       return;
     }
 
-    // Prevent booking in the past
+    // Prevent booking in the past (allow a small tolerance so 'now' is permitted)
     const selectedTime = new Date(entryTime);
     const now = new Date();
-    if (selectedTime <= now) {
-      setError("Please choose a future time for your entry");
+    const toleranceMs = 30 * 1000; // 30 seconds
+    if (selectedTime.getTime() < now.getTime() - toleranceMs) {
+      setError("Please choose a current or future time for your entry");
       return;
     }
 
@@ -73,19 +74,16 @@ export default function BookingModal({ slot, onClose, onBooked }) {
 
       const selectedVehicle = userVehicles.find(v => v.id === selectedVehicleId);
       
-      // Format entryTime to ISO 8601 format expected by backend
-      // entryTime comes as "2026-01-06T14:30" from datetime-local input
-      const formattedEntryTime = new Date(entryTime).toISOString();
-      
-      // Log the booking request for debugging
+      // Format entry/exit times to ISO 8601 format expected by backend
+      // Send local date-time (no timezone) so backend maps to LocalDateTime correctly
+      // datetime-local value is like "2026-01-25T06:17" - append seconds for consistency
+      const formattedEntryTime = entryTime.includes(":") && entryTime.length === 16 ? `${entryTime}:00` : entryTime;
       const bookingRequest = {
         slotId: slot.id,
         vehicleType: selectedVehicle.vehicleType,
         entryTime: formattedEntryTime,
       };
-      
       console.log('📋 Booking request:', bookingRequest);
-      
       const response = await bookingService.bookSlot(bookingRequest);
 
       // Show inline success banner
@@ -272,6 +270,7 @@ export default function BookingModal({ slot, onClose, onBooked }) {
               className="w-full bg-gray-100 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
 
           {/* Slot Info */}
           <div className={`p-4 rounded-lg border ${

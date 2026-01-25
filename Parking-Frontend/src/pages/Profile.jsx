@@ -170,12 +170,12 @@ export default function Profile() {
   // AUTH HOME PAGE - when not logged in
   if (mode === "home") {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-20 flex flex-col">
+      <div className="min-h-screen bg-gray-50 pb-20 flex flex-col">
         {/* Hero Section */}
-        <div className="bg-gradient-to-br from-blue-600 to-blue-400 text-white px-6 py-12 text-center">
+        <div className="bg-white px-6 py-12 text-center">
           <div className="text-6xl mb-4">🅿️</div>
-          <h1 className="text-3xl font-bold mb-2">ParkSmart</h1>
-          <p className="text-blue-100 text-lg">Smart Parking Solutions</p>
+          <h1 className="text-3xl font-bold mb-2 text-slate-900">ParkSmart</h1>
+          <p className="text-gray-600 text-lg">Smart Parking Solutions</p>
         </div>
 
         {/* Content */}
@@ -191,21 +191,29 @@ export default function Profile() {
 
           {/* Features */}
           <div className="grid grid-cols-2 gap-3 mb-8">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100">
-              <div className="text-3xl mb-2">🎯</div>
-              <p className="text-sm font-semibold text-gray-700">Quick Booking</p>
+            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-start gap-3">
+              <div className="w-10 h-10 bg-black rounded-md flex items-center justify-center text-white">🎯</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Quick Booking</p>
+              </div>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-4 rounded-xl border border-blue-100">
-              <div className="text-3xl mb-2">💰</div>
-              <p className="text-sm font-semibold text-gray-700">Best Prices</p>
+            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-start gap-3">
+              <div className="w-10 h-10 bg-black rounded-md flex items-center justify-center text-white">💰</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Best Prices</p>
+              </div>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100">
-              <div className="text-3xl mb-2">🔒</div>
-              <p className="text-sm font-semibold text-gray-700">Secure</p>
+            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-start gap-3">
+              <div className="w-10 h-10 bg-black rounded-md flex items-center justify-center text-white">🔒</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Secure</p>
+              </div>
             </div>
-            <div className="bg-gradient-to-br from-orange-50 to-red-50 p-4 rounded-xl border border-orange-100">
-              <div className="text-3xl mb-2">⚡</div>
-              <p className="text-sm font-semibold text-gray-700">Instant</p>
+            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-start gap-3">
+              <div className="w-10 h-10 bg-black rounded-md flex items-center justify-center text-white">⚡</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Instant</p>
+              </div>
             </div>
           </div>
 
@@ -213,14 +221,14 @@ export default function Profile() {
           <div className="space-y-3">
             <button
               onClick={() => setMode("login")}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 rounded-xl font-bold text-lg transition hover:shadow-lg"
+              className="w-full bg-black hover:bg-gray-900 text-white py-4 rounded-xl font-bold text-lg transition hover:shadow-lg"
             >
               👤 User Login
             </button>
 
             <button
               onClick={() => setMode("register")}
-              className="w-full bg-white border-2 border-blue-600 text-blue-600 py-4 rounded-xl font-bold text-lg transition hover:bg-blue-50"
+              className="w-full bg-white border-2 border-gray-200 text-slate-900 py-4 rounded-xl font-bold text-lg transition hover:bg-gray-50"
             >
               ✍️ Create Account
             </button>
@@ -278,29 +286,29 @@ export default function Profile() {
   // PROFILE PAGE - when logged in
   if (mode === "profile" && user) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pb-28">
-        {/* Profile Header - Enhanced */}
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-b-3xl p-6 shadow-lg mb-6">
+      <div className="min-h-screen bg-gray-50 pb-28">
+        {/* Profile Header - B/W */}
+        <div className="bg-white p-6 rounded-b-3xl shadow-md mb-6 border border-gray-100">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-md">
-              <span className="text-4xl">👤</span>
+            <div className="w-20 h-20 bg-black rounded-full flex items-center justify-center shadow-sm">
+              <span className="text-4xl text-white">👤</span>
             </div>
             <div className="flex-1">
-              <h2 className="text-2xl font-bold text-white">{user.name}</h2>
-              <p className="text-blue-100 text-sm">{user.email}</p>
+              <h2 className="text-2xl font-bold text-slate-900">{user.name}</h2>
+              <p className="text-gray-600 text-sm">{user.email}</p>
             </div>
           </div>
           
-          <div className="flex items-center justify-between bg-white/20 backdrop-blur-sm rounded-lg p-3">
+          <div className="flex items-center justify-between rounded-lg p-3 border border-gray-100">
             <div>
-              <p className="text-blue-100 text-xs mb-1">Account Type</p>
-              <span className="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-bold shadow-sm">
+              <p className="text-gray-500 text-xs mb-1">Account Type</p>
+              <span className="px-3 py-1 rounded-full text-sm font-bold border border-black text-slate-900 bg-white">
                 {user.role === "ADMIN" ? "ADMIN" : "USER"}
               </span>
             </div>
             <div className="text-right">
-              <p className="text-blue-100 text-xs mb-1">User ID</p>
-              <p className="text-white font-bold">{user.id}</p>
+              <p className="text-gray-500 text-xs mb-1">User ID</p>
+              <p className="text-slate-900 font-bold">{user.id}</p>
             </div>
           </div>
         </div>
@@ -308,8 +316,8 @@ export default function Profile() {
         <div className="px-6 space-y-4">
           {/* Personal Information Card */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-3">
-              <h3 className="font-bold text-white flex items-center gap-2">
+            <div className="px-4 py-3 border-b border-gray-100 bg-white">
+              <h3 className="font-bold text-slate-900 flex items-center gap-2">
                 <span>📋</span>
                 Personal Information
               </h3>
@@ -346,20 +354,20 @@ export default function Profile() {
 
           {/* Vehicles Section */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            <div className="bg-gradient-to-r from-green-500 to-green-600 px-4 py-3">
+            <div className="px-4 py-3 border-b border-gray-100 bg-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-white flex items-center gap-2">
+                  <h3 className="font-bold text-slate-900 flex items-center gap-2">
                     <span>🚗</span>
                     Registered Vehicles
                   </h3>
-                  <p className="text-xs text-green-100 mt-1">
+                  <p className="text-xs text-gray-500 mt-1">
                     💡 Your default vehicle is auto-selected when booking parking
                   </p>
                 </div>
                 <button
                   onClick={handleAddVehicle}
-                  className="bg-white text-green-600 px-3 py-1 rounded-lg font-bold text-sm hover:bg-green-50 transition shadow-sm"
+                  className="bg-white text-black border border-black px-3 py-1 rounded-lg font-bold text-sm hover:bg-black hover:text-white transition shadow-sm"
                 >
                   + Add
                 </button>
@@ -372,13 +380,13 @@ export default function Profile() {
                   {user.vehicles.map((vehicle) => (
                     <div
                       key={vehicle.id}
-                      className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200 hover:shadow-md transition"
+                      className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition"
                     >
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <p className="font-bold text-gray-900 text-base">
-                              {vehicle.isDefault && <span className="text-green-600">Default </span>}
+                            <p className="font-bold text-slate-900 text-base">
+                              {vehicle.isDefault && <span className="text-slate-700">Default </span>}
                               {vehicle.vehicleType}
                             </p>
                           </div>
@@ -401,24 +409,24 @@ export default function Profile() {
                         </div>
                       </div>
 
-                      <div className="flex gap-2 pt-3 border-t border-blue-200">
+                      <div className="flex gap-2 pt-3 border-t border-gray-100">
                         {!vehicle.isDefault && (
                           <button
                             onClick={() => handleSetDefaultVehicle(vehicle.id)}
-                            className="flex-1 bg-green-100 hover:bg-green-200 text-green-700 px-3 py-2 rounded-lg font-semibold text-xs transition"
+                            className="flex-1 bg-white border border-black text-black px-3 py-2 rounded-lg font-semibold text-xs transition"
                           >
                             Set Default
                           </button>
                         )}
                         <button
                           onClick={() => handleEditVehicle(vehicle)}
-                          className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded-lg font-semibold text-xs transition"
+                          className="flex-1 bg-white border border-black text-black px-3 py-2 rounded-lg font-semibold text-xs transition"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDeleteVehicle(vehicle.id)}
-                          className="flex-1 bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded-lg font-semibold text-xs transition"
+                          className="flex-1 bg-white border border-red-600 text-red-600 px-3 py-2 rounded-lg font-semibold text-xs transition"
                         >
                           Delete
                         </button>
@@ -433,7 +441,7 @@ export default function Profile() {
                   <p className="text-gray-500 text-sm mb-4">Add your vehicle to get started</p>
                   <button
                     onClick={handleAddVehicle}
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-2 rounded-lg font-bold text-sm transition shadow-md"
+                    className="bg-black text-white px-5 py-2 rounded-lg font-bold text-sm transition shadow-md"
                   >
                     Add Your First Vehicle
                   </button>
@@ -555,7 +563,7 @@ export default function Profile() {
                 </button>
                 <button
                   onClick={handleSaveVehicle}
-                  className="flex-1 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition"
+                  className="flex-1 px-4 py-3 bg-black hover:bg-gray-900 text-white rounded-lg font-semibold transition"
                 >
                   {editingVehicleId ? "Update" : "Add"} Vehicle
                 </button>

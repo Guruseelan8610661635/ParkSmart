@@ -10,11 +10,11 @@ export const pricingService = {
   },
 
   /**
-   * Get pricing for vehicle type (admin only)
+   * Get pricing for vehicle type (public)
    * @param {string} vehicleType
    */
   getPricingByType: async (vehicleType) => {
-    const response = await api.get(`/admin/pricing/${vehicleType}`);
+    const response = await api.get(`/pricing/rates/${vehicleType}`);
     return response.data;
   },
 

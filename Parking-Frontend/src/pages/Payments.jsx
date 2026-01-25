@@ -13,6 +13,9 @@ export default function Payments() {
   const [toast, setToast] = useState(null);
   const [activeTab, setActiveTab] = useState("history");
   const [pendingPayment, setPendingPayment] = useState(null);
+  const [pendingLiveMinutes, setPendingLiveMinutes] = useState(null);
+  const [pendingLiveAmount, setPendingLiveAmount] = useState(null);
+  const [pendingRatePerHour, setPendingRatePerHour] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const location = useLocation();
 
@@ -60,6 +63,20 @@ export default function Payments() {
       });
 
       setPendingPayment(unpaid || null);
+    // initialize live pending values
+    if (unpaid) {
+      try {
+        const minutes = unpaid.exitTime ? (unpaid.durationMinutes || 0) : Math.max(0, Math.floor((Date.now() - new Date(unpaid.entryTime).getTime()) / 60000));
+        setPendingLiveMinutes(minutes);
+        setPendingLiveAmount(unpaid.parkingFee || 0);
+      } catch (e) {
+        setPendingLiveMinutes(null);
+        setPendingLiveAmount(null);
+      }
+    } else {
+      setPendingLiveMinutes(null);
+      setPendingLiveAmount(null);
+    }
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Failed to load payment data";
       setError(errorMsg);
@@ -68,11 +85,52 @@ export default function Payments() {
     }
   };
 
+  // Live update pending payment amount & duration every 30s
+  useEffect(() => {
+    let mounted = true;
+    const loadRateAndTick = async () => {
+      if (!pendingPayment) return;
+      try {
+        const data = await pricingService.getPricingByType(pendingPayment.vehicleType || 'CAR');
+        if (!mounted) return;
+        setPendingRatePerHour(data.hourlyRate || 0);
+        // initial compute
+        let minutes = 0;
+        try {
+          minutes = pendingPayment.exitTime ? (pendingPayment.durationMinutes || 0) : (pendingPayment.entryTime ? Math.max(0, Math.floor((Date.now() - new Date(pendingPayment.entryTime).getTime()) / 60000)) : (pendingPayment.durationMinutes || 0));
+        } catch (e) { minutes = pendingPayment.durationMinutes || 0; }
+        setPendingLiveMinutes(minutes);
+        setPendingLiveAmount(((data.hourlyRate || 0) * minutes) / 60 || pendingPayment.parkingFee || 0);
+      } catch (e) {
+        if (!mounted) return;
+        setPendingRatePerHour(0);
+      }
+    };
+
+    loadRateAndTick();
+
+    const interval = setInterval(() => {
+      if (!pendingPayment) return;
+      let minutes = 0;
+      try {
+        minutes = pendingPayment.exitTime ? (pendingPayment.durationMinutes || 0) : (pendingPayment.entryTime ? Math.max(0, Math.floor((Date.now() - new Date(pendingPayment.entryTime).getTime()) / 60000)) : (pendingPayment.durationMinutes || 0));
+      } catch (e) { minutes = pendingPayment.durationMinutes || 0; }
+      setPendingLiveMinutes(minutes);
+      setPendingLiveAmount(((pendingRatePerHour || 0) * minutes) / 60 || pendingPayment.parkingFee || 0);
+    }, 30000);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, [pendingPayment, pendingRatePerHour]);
+
   const calculateFee = async () => {
     try {
       const totalMinutes = durationHours * 60 + parseInt(durationMinutes || 0);
       const priceData = await pricingService.getPricingByType(vehicleType);
-      const hourlyRate = priceData.hourlyRate || 0;
+    // support both legacy (hourlyRate) and new (ratePerHour) keys
+    const hourlyRate = priceData?.hourlyRate ?? priceData?.ratePerHour ?? 0;
       const hours = totalMinutes / 60;
       let fee = hourlyRate * hours;
       if (promoDiscount) {
@@ -179,30 +237,57 @@ export default function Payments() {
           <div className="space-y-4">
             {/* Pending Payment */}
             {pendingPayment && (
-              <div className="bg-amber-50 border-2 border-amber-300 p-5 rounded-lg">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-amber-900 flex items-center gap-2">
-                    <span className="text-xl">⏳</span> Pending Payment
-                  </h3>
-                  <span className="bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                    Action Required
-                  </span>
+              <>
+                {/* Desktop / larger screens */}
+                <div className="hidden md:block bg-amber-50 border-2 border-amber-300 p-5 rounded-lg">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-bold text-amber-900 flex items-center gap-2">
+                      <span className="text-xl">⏳</span> Pending Payment
+                    </h3>
+                    <span className="bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      Action Required
+                    </span>
+                  </div>
+                  <p className="text-sm text-amber-800 mb-4">Slot {pendingPayment.slotNumber} • {pendingPayment.locationName}</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-3xl font-bold text-amber-900">₹{(pendingLiveAmount != null ? pendingLiveAmount : (pendingPayment.parkingFee || 0)).toFixed(2)}</p>
+                    <button
+                      onClick={() => setShowPaymentModal(true)}
+                      className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-lg font-semibold transition text-sm"
+                    >
+                      Pay Now
+                    </button>
+                  </div>
                 </div>
-                <p className="text-sm text-amber-800 mb-4">Slot {pendingPayment.slotNumber} • {pendingPayment.locationName}</p>
-                <div className="flex items-center justify-between">
-                  <p className="text-3xl font-bold text-amber-900">₹{(pendingPayment.parkingFee || 0).toFixed(2)}</p>
-                  <button
-                    onClick={() => setShowPaymentModal(true)}
-                    className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-lg font-semibold transition text-sm"
-                  >
-                    Pay Now
-                  </button>
+
+                {/* Mobile B/W */}
+                <div className="md:hidden bg-white rounded-xl p-4 border border-black/10 shadow-md">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-semibold">⏳</div>
+                      <div>
+                        <p className="font-bold text-slate-900">Pending Payment</p>
+                        <p className="text-xs text-gray-500">Slot {pendingPayment.slotNumber} • {pendingPayment.locationName}</p>
+                      </div>
+                    </div>
+                    <span className="px-2 py-1 rounded text-xs font-semibold border border-black text-slate-900 bg-white">Action</span>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-xl font-bold text-slate-900">₹{(pendingLiveAmount != null ? pendingLiveAmount : (pendingPayment.parkingFee || 0)).toFixed(2)}</p>
+                    <button
+                      onClick={() => setShowPaymentModal(true)}
+                      className="bg-black text-white px-4 py-2 rounded-lg font-semibold"
+                    >
+                      Pay
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
 
             {/* Total Amount */}
-            <div className="bg-blue-50 border border-blue-200 p-5 rounded-lg">
+            <div className="bg-gray-50 border border-gray-200 p-5 rounded-lg">
               <p className="text-sm text-blue-600 font-semibold mb-2">Total Paid</p>
               <p className="text-4xl font-bold text-blue-900">₹{totalPaid.toFixed(2)}</p>
               <p className="text-xs text-blue-600 mt-2">{pastBookings.filter(b => b?.paymentStatus === 'PAID' || !!b?.transactionId).length} transactions</p>
@@ -224,6 +309,7 @@ export default function Payments() {
               </div>
             ) : (
               <div className="space-y-3">
+                <div className="hidden md:block space-y-3">
                 {pastBookings.map((booking) => {
                   const isPaid = booking?.paymentStatus === 'PAID' || !!booking?.transactionId;
                   return (
@@ -245,6 +331,42 @@ export default function Payments() {
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Mobile B/W */}
+              <div className="md:hidden space-y-3">
+                {pastBookings.map((booking) => {
+                  const isPaid = booking?.paymentStatus === 'PAID' || !!booking?.transactionId;
+                  return (
+                    <div key={booking.id} className="bg-white rounded-xl p-4 border border-black/10 shadow-md">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-semibold">{(booking.locationName || 'L').charAt(0).toUpperCase()}</div>
+                          <div>
+                            <p className="font-bold text-slate-900">Slot {booking.slotNumber}</p>
+                            <p className="text-xs text-gray-500">{booking.locationName}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-slate-900">₹{(booking.parkingFee || 0).toFixed(2)}</p>
+                          <p className="text-xs text-gray-500 mt-1">{isPaid ? '✓ Paid' : 'Pending'}</p>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-600">
+                        <div>
+                          <p className="text-gray-500">Vehicle</p>
+                          <p className="font-semibold text-slate-900">{booking.vehicleType || 'CAR'}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-gray-500">Duration</p>
+                          <p className="font-semibold text-slate-900">{booking.durationMinutes || 0}m</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
               </div>
             )}
           </div>
@@ -293,7 +415,7 @@ export default function Payments() {
 
               <button
                 onClick={calculateFee}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
+                className="w-full bg-black hover:bg-gray-900 text-white font-bold py-3 rounded-lg transition"
               >
                 Calculate Fee
               </button>
@@ -322,11 +444,11 @@ export default function Payments() {
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                 placeholder="ENTER CODE"
-                className="w-full border border-gray-300 p-3 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
+                className="w-full border border-gray-300 p-3 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-slate-600 uppercase"
               />
               <button
                 onClick={handleApplyPromo}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
+                className="w-full bg-black hover:bg-gray-900 text-white font-bold py-3 rounded-lg transition"
               >
                 Apply Code
               </button>
@@ -350,7 +472,7 @@ export default function Payments() {
                   <div
                     key={promo.id}
                     onClick={() => setPromoCode(promo.code)}
-                    className="bg-white border border-gray-200 p-4 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition cursor-pointer"
+                    className="bg-white border border-gray-200 p-4 rounded-lg hover:border-gray-200 hover:bg-gray-50 transition cursor-pointer"
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-3 flex-1">
@@ -360,7 +482,7 @@ export default function Payments() {
                           <p className="text-xs text-gray-500 mt-1">{promo.description}</p>
                         </div>
                       </div>
-                      <div className="bg-blue-100 text-blue-900 px-3 py-1 rounded-lg font-bold text-sm">
+                      <div className="bg-gray-100 text-slate-700 px-3 py-1 rounded-lg font-bold text-sm border border-gray-200">
                         {promo.discountPercentage}%
                       </div>
                     </div>

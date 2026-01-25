@@ -300,7 +300,7 @@ const Reports = () => {
     {
       title: 'Total Bookings',
       value: usageReport.totalBookings,
-      accent: 'text-blue-600 bg-blue-50',
+      accent: 'text-slate-700 bg-slate-50',
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -368,7 +368,7 @@ const Reports = () => {
             <p className="text-gray-600">See bookings, revenue, and utilization at a glance.</p>
           </div>
           <div className="flex items-center gap-3 text-sm text-gray-600">
-            <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-medium">{reportType.toUpperCase()}</span>
+            <span className="px-3 py-1 rounded-full bg-slate-50 text-slate-700 font-medium">{reportType.toUpperCase()}</span>
             <span className="hidden sm:block text-gray-500">Auto-refreshes when period changes</span>
           </div>
         </div>
@@ -388,7 +388,7 @@ const Reports = () => {
                 key={option.key}
                 onClick={() => setReportType(option.key)}
                 className={`${pillBase} ${reportType === option.key
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-slate-700 text-white shadow-sm'
                   : 'bg-slate-100 text-gray-700 hover:bg-slate-200'
                   }`}
               >
@@ -406,7 +406,7 @@ const Reports = () => {
                   type="datetime-local"
                   value={customDates.startDate}
                   onChange={(e) => setCustomDates({ ...customDates, startDate: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500"
                   required
                 />
               </div>
@@ -416,14 +416,14 @@ const Reports = () => {
                   type="datetime-local"
                   value={customDates.endDate}
                   onChange={(e) => setCustomDates({ ...customDates, endDate: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500"
                   required
                 />
               </div>
               <div className="flex items-end">
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="px-6 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors"
                 >
                   Generate
                 </button>
@@ -556,7 +556,7 @@ const Reports = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Active</span>
-                    <span className="font-semibold text-blue-600">{usageReport.activeBookings}</span>
+                    <span className="font-semibold text-slate-700">{usageReport.activeBookings}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Cancelled</span>
@@ -621,9 +621,9 @@ const Reports = () => {
                 <>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                     {usageReport.topPeakHours.map((peak, index) => (
-                      <div key={index} className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 text-center border border-blue-100">
+                      <div key={index} className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-4 text-center border border-slate-100">
                         <p className="text-xs text-gray-500">#{index + 1}</p>
-                        <p className="text-lg font-semibold text-blue-700">{peak.timeRange}</p>
+                        <p className="text-lg font-semibold text-slate-700">{peak.timeRange}</p>
                         <p className="text-sm text-gray-700">{peak.bookingCount} bookings</p>
                       </div>
                     ))}
@@ -771,7 +771,7 @@ const Reports = () => {
                   </div>
                   <button
                     onClick={fetchAdvancedAnalytics}
-                    className="px-3 py-1.5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                    className="px-3 py-1.5 text-xs bg-slate-700 text-white rounded hover:bg-slate-800 transition-colors"
                   >
                     🔄 Refresh
                   </button>
@@ -787,7 +787,7 @@ const Reports = () => {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Bookings:</span>
-                          <span className="font-semibold text-blue-600">{loc.totalBookings}</span>
+                          <span className="font-semibold text-slate-700">{loc.totalBookings}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Occupancy:</span>
@@ -889,7 +889,7 @@ const Reports = () => {
                   </div>
                   <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                     <p className="text-xs text-gray-600 mb-1">Peak Hour</p>
-                    <p className="text-xl font-bold text-blue-600">{revenueAnalytics.peakHour}:00</p>
+                    <p className="text-xl font-bold text-slate-700">{revenueAnalytics.peakHour}:00</p>
                     <p className="text-xs text-gray-500">{formatCurrencyCompact(revenueAnalytics.peakHourRevenue)}</p>
                   </div>
                 </div>
@@ -928,7 +928,7 @@ const Reports = () => {
                           <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
                         <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${user.userSegment === 'VIP' ? 'bg-yellow-100 text-yellow-800' :
-                          user.userSegment === 'REGULAR' ? 'bg-blue-100 text-blue-800' :
+                          user.userSegment === 'REGULAR' ? 'bg-slate-100 text-slate-800' :
                             'bg-gray-200 text-gray-700'
                           }`}>
                           {user.userSegment}
@@ -970,7 +970,7 @@ const Reports = () => {
                     <button
                       onClick={fetchRealtimeOccupancy}
                       disabled={realtimeLoading}
-                      className="px-3 py-1.5 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                      className="px-3 py-1.5 text-xs bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50"
                     >
                       {realtimeLoading ? '⏳ Loading...' : '🔄 Refresh Now'}
                     </button>
