@@ -22,7 +22,7 @@ import com.smartparking.service.BookingService;
 @RestController
 @RequestMapping("/api/admin/bookings")
 @PreAuthorize("hasRole('ADMIN')")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 public class AdminBookingController {
 
     @Autowired

@@ -16,7 +16,7 @@ import com.smartparking.service.AdminVehiclePricingService;
 @RestController
 @RequestMapping("/api/admin/pricing")
 @PreAuthorize("hasRole('ADMIN')")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 public class AdminPricingController {
 
     @Autowired

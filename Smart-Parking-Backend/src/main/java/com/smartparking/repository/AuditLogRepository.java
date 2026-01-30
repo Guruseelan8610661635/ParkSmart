@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import com.smartparking.model.AuditLog;
 
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
-    List<AuditLog> findByUserId(Long userId);
+    List<AuditLogz> findByUserId(Long userId);
     List<AuditLog> findByAction(String action);
     List<AuditLog> findByEntityType(String entityType);
     

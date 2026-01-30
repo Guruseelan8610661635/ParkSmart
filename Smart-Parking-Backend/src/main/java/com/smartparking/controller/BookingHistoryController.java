@@ -17,7 +17,7 @@ import com.smartparking.service.BookingService;
 
 @RestController
 @RequestMapping("/api/bookings/history")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 public class BookingHistoryController {
 
     @Autowired

@@ -16,7 +16,7 @@ import com.smartparking.service.AnalyticsService;
 @RestController
 @RequestMapping("/api/admin/analytics")
 @PreAuthorize("hasRole('ADMIN')")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 public class AnalyticsController {
 
     @Autowired

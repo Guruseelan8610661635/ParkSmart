@@ -30,7 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // ✅ Skip JWT for public endpoints
+        // Skip JWT for public endpoints
         if ((path.startsWith("/api/auth/login") || path.startsWith("/api/auth/register") || path.startsWith("/api/map"))) {
             filterChain.doFilter(request, response);
             return;
@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // No token → continue (Spring Security will handle unauthenticated requests)
         if (header == null || !header.startsWith("Bearer ")) {
-            System.out.println("⚠️ No Authorization header for: " + path);
+            System.out.println("No Authorization header for: " + path);
             filterChain.doFilter(request, response);
             return;
         }
@@ -50,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (!jwtUtil.validateToken(token)) {
                 // Invalid token - let it pass to Spring Security
-                System.out.println("⚠️ Invalid token for: " + path);
+                System.out.println("Invalid token for: " + path);
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -58,8 +58,8 @@ public class JwtFilter extends OncePerRequestFilter {
             String email = jwtUtil.extractUsername(token);
             String role = jwtUtil.extractRole(token);
 
-            System.out.println("✅ Valid JWT - User: " + email + ", Role: " + role);
-            System.out.println("✅ Authorities: " + jwtUtil.getAuthorities(role));
+            System.out.println("Valid JWT - User: " + email + ", Role: " + role);
+            System.out.println("Authorities: " + jwtUtil.getAuthorities(role));
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
@@ -76,7 +76,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             // Log the error but continue - let Spring Security handle it
-            System.err.println("❌ JWT Filter Error: " + e.getMessage());
+            System.err.println("JWT Filter Error: " + e.getMessage());
             e.printStackTrace();
         }
 

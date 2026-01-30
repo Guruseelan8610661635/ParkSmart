@@ -48,7 +48,7 @@ public class SecurityConfig {
     }
 
     /**
-     * ✅ CORS CONFIGURATION
+     * CORS CONFIGURATION
      * Required for React (localhost:5173) → Spring Boot (8080)
      */
     @Bean
@@ -56,7 +56,7 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        // ✅ Allow multiple origins
+        // Allow multiple origins
         config.setAllowedOriginPatterns(List.of(
             "http://localhost:*",
             "http://127.0.0.1:*",
@@ -64,19 +64,19 @@ public class SecurityConfig {
             "http://localhost:3000"
         ));
 
-        // ✅ Allow REST methods
+        // Allow REST methods
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
-        // ✅ Allow headers like Content-Type, Authorization
+        // Allow headers like Content-Type, Authorization
         config.setAllowedHeaders(List.of("*"));
 
-        // ✅ Expose JWT token if needed
+        // Expose JWT token if needed
         config.setExposedHeaders(List.of("Authorization"));
 
-        // ✅ Required when using JWT + browser
+        // Required when using JWT + browser
         config.setAllowCredentials(true);
 
-        // ✅ Cache preflight for 24 hours
+        // Cache preflight for 24 hours
         config.setMaxAge(86400L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

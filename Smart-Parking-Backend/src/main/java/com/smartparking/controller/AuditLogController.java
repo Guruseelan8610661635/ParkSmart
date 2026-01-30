@@ -16,7 +16,7 @@ import com.smartparking.service.AuditLogService;
 @RestController
 @RequestMapping("/api/admin/audit-logs")
 @PreAuthorize("hasRole('ADMIN')")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuditLogController {
 
     @Autowired
