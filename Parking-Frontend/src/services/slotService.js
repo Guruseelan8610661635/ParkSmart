@@ -7,7 +7,7 @@ export const slotService = {
    */
   getSlotsByLocation: async (locationId) => {
     console.log(`🔍 [slotService] Fetching slots for location ID: ${locationId}`);
-    const response = await api.get(`/slots?locationId=${locationId}`);
+    const response = await api.get(`/admin/slots/location/${locationId}`);
     console.log(`✅ [slotService] Received response:`, response.data);
     return response.data;
   },

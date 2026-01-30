@@ -19,7 +19,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/admin/slots")
-@PreAuthorize("hasRole('ADMIN')")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AdminSlotController {
 
@@ -29,6 +28,7 @@ public class AdminSlotController {
     /**
      * Add a new parking slot
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> addSlot(@Valid @RequestBody SlotRequest slotRequest, BindingResult bindingResult) {
         System.out.println("🔴 [POST /admin/slots] Request received");
@@ -120,6 +120,7 @@ public class AdminSlotController {
     /**
      * Update slot details
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateSlot(@PathVariable Long id, @Valid @RequestBody SlotRequest slotRequest,
                                        BindingResult bindingResult) {
@@ -142,6 +143,7 @@ public class AdminSlotController {
     /**
      * Toggle slot availability
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/toggle")
     public ResponseEntity<?> toggleAvailability(@PathVariable Long id) {
         try {
@@ -159,6 +161,7 @@ public class AdminSlotController {
     /**
      * Disable a slot for maintenance with optional notes
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/disable")
     public ResponseEntity<?> disableSlot(@PathVariable Long id, @RequestBody(required = false) Map<String, String> request) {
         try {
@@ -177,6 +180,7 @@ public class AdminSlotController {
     /**
      * Enable a slot (remove from maintenance mode)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/enable")
     public ResponseEntity<?> enableSlot(@PathVariable Long id) {
         try {
@@ -194,6 +198,7 @@ public class AdminSlotController {
     /**
      * Update maintenance notes for a slot
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/maintenance-notes")
     public ResponseEntity<?> updateMaintenanceNotes(@PathVariable Long id, @RequestBody Map<String, String> request) {
         try {
@@ -212,6 +217,7 @@ public class AdminSlotController {
     /**
      * Set slot availability status
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/availability")
     public ResponseEntity<?> setAvailability(@PathVariable Long id, @RequestBody Map<String, Boolean> request) {
         try {
@@ -234,6 +240,7 @@ public class AdminSlotController {
     /**
      * Delete a slot
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSlot(@PathVariable Long id) {
         try {
@@ -277,6 +284,7 @@ public class AdminSlotController {
     /**
      * Bulk add multiple slots for a location
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/bulk/location/{locationId}")
     public ResponseEntity<?> addMultipleSlots(@PathVariable Long locationId, @RequestBody Map<String, Object> request) {
         try {
